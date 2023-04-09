@@ -9,16 +9,20 @@ const AdminUsers = require('../routers/admin/users.router.js')
 const User = require('../routers/client/users.router.js')
 const AdminCategory = require('../routers/admin/category.router.js')
 const Category = require('../routers/client/category.router.js')
+const Like = require('../routers/client/like.router.js')
+const AdminLike = require('../routers/admin/like.router.js')
 
 app.use('/public', express.static('./public'))
 
 // Admin routes
 app.use('/admin/user', AdminUsers)
 app.use('/admin/category', AdminCategory)
+app.use('/admin/like', AdminLike)
 
 // Client routes
 app.use('/user', User)
 app.use('/category', Category)
+app.use('/like', Like)
 
 app.use((req, res) => {
     res.status(404).send('404')
