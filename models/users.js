@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       defaultValue: 'public/images/default_avatar.jpg'
     },
-    info:  {
+    info: {
       type: DataTypes.TEXT,
       defaultValue: ''
     },
@@ -29,7 +29,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       defaultValue: 0
     },
-    email: DataTypes.STRING,
+    email: {
+      type: DataTypes.STRING,
+      unique: true
+    },
     password: DataTypes.STRING,
     type: {
       type: DataTypes.INTEGER,
@@ -40,8 +43,8 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: false
     },
   }, {
-      sequelize,
-      modelName: 'Users',
-    });
+    sequelize,
+    modelName: 'Users',
+  });
   return Users;
 };
