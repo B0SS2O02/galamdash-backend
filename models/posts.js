@@ -18,9 +18,15 @@ module.exports = (sequelize, DataTypes) => {
     content: DataTypes.TEXT,
     img: DataTypes.STRING,
     info: DataTypes.TEXT,
-    ban: DataTypes.BOOLEAN,
     creatorId: DataTypes.INTEGER,
-    ball: DataTypes.INTEGER
+    ban: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    ball: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0
+    }
   }, {
     sequelize,
     modelName: 'Posts',
