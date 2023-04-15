@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Category = require('../../controllers/admin/category.controller.js')
+const Verify =require('../../controllers/admin/verify.js')
 
-router.use(Category.verify );
+router.use(Verify );
 
 router.get('/', Category.list)
 
