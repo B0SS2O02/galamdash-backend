@@ -3,34 +3,41 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const fs = require('fs')
 require('dotenv').config()
+const AsyncHandler = require("express-async-handler")
 
-exports.login = async (req, res) => {
+exports.login = AsyncHandler(async (req, res) => {
     if (!req.body.email) {
         res.status(400).json({ msg: "Email input is empty" });
-    }
-    if (!req.body.password) {
-        res.status(400).json({ msg: "Password input is empty" });
-    }
-    const user = await models.Users.findOne({ where: { email: req.body.email } })
-    if (!user) {
-        res.status(404).json({ msg: "User is not define" });
-    }
-    if (!await bcrypt.compare(req.body.password, user.password)) {
-        res.status(400).json({ msg: "Password is wrong" })
-    }
-    const token = jwt.sign(
-        { user_id: user.id, type: user.type },
-        process.env.TOKEN_KEY,
-        {
-            expiresIn: "5h",
+    } else
+        if (!req.body.password) {
+            res.status(400).json({ msg: "Password input is empty" });
+        } else {
+            const user = await models.Users.findOne({ where: { email: req.body.email } })
+            if (!user) {
+
+                res.status(404).json({ msg: "User is not define" });
+            } else if (user.ban) {
+                res.status(403).json({ msg: 'You are banned' })
+            } else if (!await bcrypt.compare(req.body.password, user.password)) {
+                return res.status(400).json({ msg: "Password is wrong" })
+            } else {
+                const token = await jwt.sign(
+                    { user_id: user.id, type: user.type },
+                    process.env.TOKEN_KEY,
+                    {
+                        expiresIn: "24h",
+                    }
+                )
+                res.status(200).json({
+                    image: user.img,
+                    nick: user.nick,
+                    type: user.type,
+                    token: token
+                })
+            }
         }
-    );
-    res.status(201).json({
-        image: user.img,
-        nick: user.nick,
-        token: token
-    });
-}
+
+})
 
 exports.registry = async (req, res) => {
     if (!req.body.email) {
@@ -68,11 +75,13 @@ exports.registry = async (req, res) => {
             expiresIn: "5h",
         }
     );
-    res.status(201).json({
+    let body = {
         image: user.img,
         nick: user.nick,
+        type: user.type,
         token: token
-    });
+    }
+    res.status(200).json(body);
 }
 
 exports.verify = (req, res, next) => {
@@ -118,7 +127,6 @@ exports.cabinet = async (req, res) => {
         })
     }
     let data
-    console.log(req.params.id, req.id)
     if (req.params.id == req.id) {
         data = {
             nick: user.nick,
@@ -159,7 +167,7 @@ exports.image = async (req, res) => {
         })
     }
     const old = user.img
-    if (user.img !== "./public/images/default_avatar.jpg") {
+    if (user.img !== "public/images/default_avatar.jpg") {
         fs.unlink(old, (err) => {
             if (err) return console.log(err)
         });
@@ -218,5 +226,29 @@ exports.edit = async (req, res) => {
     delete body['password']
     res.status(200).json({
         date: body
+    })
+}
+
+exports.user = async (req, res) => {
+    if (!req.id) {
+        res.status(400).json({
+            msg: "You not authorizated"
+        })
+    }
+    let user = await models.Users.findOne({
+        where: {
+            id: req.id
+        }
+    })
+    if (!user) {
+        res.status(404).json({
+            msg: 'Account not define'
+        })
+    }
+    res.json({
+        data: {
+            nick: user.nick,
+            img: user.img
+        }
     })
 }

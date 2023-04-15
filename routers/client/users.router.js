@@ -35,4 +35,6 @@ router.put('/image', upload.single('image'), User.image)
 
 router.put('/edit', User.edit)
 
+router.get('/', User.user)
+
 module.exports = router;
