@@ -5,7 +5,7 @@ const models = require('../../models')
 
 exports.count = async (req, res) => {
     let body = [
-        { title: 'Users', color: 'info' }
+        { title: 'user', color: 'info' }
     ]
     for (let i = 0; i < body.length; i++) {
         body[i]['count'] = await models.Users.count()
