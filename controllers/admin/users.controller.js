@@ -1,8 +1,4 @@
 const models = require('../../models')
-const bcrypt = require('bcrypt')
-const { parse } = require('dotenv')
-const jwt = require('jsonwebtoken')
-const { where } = require('sequelize')
 
 
 exports.list = async (req, res, next) => {

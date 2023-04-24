@@ -5,7 +5,7 @@ exports.list = async (req, res) => {
     let page = req.query.page - 1 || 0
     const count = 10
     const category = await models.Categories.findAll({
-        attributes:['id','title'],
+        attributes: ['id', 'title'],
         offset: page * count,
         limit: count
     })
@@ -19,7 +19,11 @@ exports.view = async (req, res) => {
         })
     }
     const user = await models.Categories.findOne({
-        attributes:['id','title'],
+        attributes: ['id', 'title'],
+        include: [{
+            model: models.Posts,
+            attributes: ['id', 'img', 'title','info']
+        }],
         where: {
             id: req.params.id
         }

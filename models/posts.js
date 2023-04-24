@@ -1,6 +1,5 @@
 'use strict';
-const {
-  Model
+const { Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Posts extends Model {
@@ -10,19 +9,35 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Posts.belongsTo(models.Categories, {
+        foreignKey: "CategoryId",
+        onDelete: 'SET NULL'
+      });
+      models.Categories.hasMany(Posts)
+      Posts.hasMany(models.Categories, {
+        as: "Posts"
+      })
+      Posts.belongsTo(models.Users, {
+        foreignKey: "creatorId",
+        onDelete: 'CASCADE'
+      });
+      models.Users.hasMany(Posts)
+      Posts.hasMany(models.Users, {
+       
+      })
     }
   }
   Posts.init({
     title: DataTypes.STRING,
     content: DataTypes.TEXT,
+    CategoryId: DataTypes.INTEGER,
     img: DataTypes.STRING,
     info: DataTypes.TEXT,
-    creatorId: DataTypes.INTEGER,
     ban: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     },
+    creatorId: DataTypes.INTEGER,
     ball: {
       type: DataTypes.INTEGER,
       defaultValue: 0

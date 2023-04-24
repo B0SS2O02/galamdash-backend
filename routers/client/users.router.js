@@ -3,7 +3,6 @@ const router = express.Router();
 const User = require('../../controllers/client/users.controller.js')
 
 const multer = require('multer');
-const { verify } = require('jsonwebtoken');
 const storageConfig = multer.diskStorage({
     destination: (req, res, cb) => {
         cb(null, './public/images')
@@ -23,7 +22,7 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage: storageConfig, fileFilter: fileFilter })
 
-router.use(User.verify)
+
 
 router.post('/login', User.login)
 
