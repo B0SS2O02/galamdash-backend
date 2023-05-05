@@ -25,8 +25,9 @@ title:string,content:text,img:string,info:text,ban:boolean,creatorId:integer
 WiseWords
 content:text,author:string
 
-Expectation
-title:string,content:text,img:string,info:text,ban:boolean,creatorId:integer
+
+Unconfirmed
+title:string,content:text,img:string,info:text,creatorId:integer
 
 Views
 userId:integer,postId:integer

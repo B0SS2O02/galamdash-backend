@@ -11,19 +11,21 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Posts.belongsTo(models.Categories, {
         foreignKey: "CategoryId",
+        sourceKey: "id",
         onDelete: 'SET NULL'
       });
       models.Categories.hasMany(Posts)
       Posts.hasMany(models.Categories, {
         as: "Posts"
       })
+
       Posts.belongsTo(models.Users, {
         foreignKey: "creatorId",
         onDelete: 'CASCADE'
       });
       models.Users.hasMany(Posts)
       Posts.hasMany(models.Users, {
-       
+        foreignKey: "creatorId"
       })
     }
   }

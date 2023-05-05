@@ -7,6 +7,6 @@ router.use(Verify)
 
 router.get('/', Like.list)
 
-router.get('/:id', Like.view)
+router.get('/view', Like.view)
 
 module.exports = router;

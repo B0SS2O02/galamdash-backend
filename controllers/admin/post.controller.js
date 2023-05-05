@@ -34,32 +34,42 @@ exports.list = async (req, res) => {
     }
 }
 
-exports.view = async (req, res) => {
-    if (!req.params.id) {
-        res.status(400).json({
-            msg: 'Id parametr is empty'
-        })
-    }
-    const post = await models.Posts.findOne({
-        include: [{
-            model: models.Categories,
-            attributes: ['id', 'title']
-        }, {
-            model: models.Users,
-            attributes: ['id', 'nick', 'img']
-        }],
-        attributes: ['id', 'title', 'content', 'img', 'info', 'ball', 'ban', ['createdAt', 'time']],
-        where: {
-            id: req.params.id
+exports.view = async (req, res, next) => {
+    try {
+        if (!req.params.id) {
+            res.status(400).json({
+                msg: 'Id parametr is empty'
+            })
+            next()
         }
+        const post = await models.Posts.findOne({
+            include: [{
+                model: models.Categories,
+                attributes: ['id', 'title']
+            }, {
+                model: models.Users,
+                attributes: ['id', 'nick', 'img']
+            }, {
+                model: models.Likes,
+                // attributes: ['id', 'nick', 'img']
+            }],
+            // attributes: ['id', 'title', 'content', 'img', 'info', 'ball', 'ban', ['createdAt', 'time']],
+            where: {
+                id: req.params.id
+            }
 
-    })
-    if (!post) {
-        res.status(400).json({
-            msg: "Posts undefine"
         })
+        if (!post) {
+            res.status(400).json({
+                msg: "Posts undefine"
+            })
+            next()
+        }
+        res.status(200).json(post)
+    } catch (error) {
+        console.log(error)
     }
-    res.status(200).json(post)
+
 }
 
 

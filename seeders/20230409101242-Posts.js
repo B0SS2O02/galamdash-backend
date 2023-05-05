@@ -18,7 +18,7 @@ module.exports = {
       img: 'public/images/default_avatar.jpg',
       info: '',
       creatorId: 1,
-      CategoryId: 1,
+      CategoryId: 3,
       createdAt: new Date(),
       updatedAt: new Date(),
     }, {

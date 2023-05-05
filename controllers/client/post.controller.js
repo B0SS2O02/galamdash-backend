@@ -1,39 +1,52 @@
 const models = require('../../models')
-
+const check = require('./check')
 
 exports.list = async (req, res) => {
-    let page = req.query.page - 1 || 0
-    const count = 10
-    const Posts = await models.Posts.findAll({
-        attributes: ['id', 'title', 'img'],
-        offset: page * count,
-        limit: count
-    })
+    try {
+        const page = req.query.page - 1 || 0
+        const user = req.query.userId || 0
+        const my = req.query.my || false
+        const count = req.query.count || 10
+        let where = {}
+        if (my) {
+            if (!!req.id) {
+                where['creatorId'] = req.id
+            }
+        } else {
+            if (user > 0) {
+                where['creatorId'] = user
+            }
+        }
+        const Posts = await models.Posts.findAll({
+            where: where,
+            attributes: ['id', 'title', 'img', 'creatorId'],
+            offset: page * count,
+            limit: count
+        })
+        check.send(Posts, res)
+    } catch (error) {
+        console.log(error)
+    }
 
-    res.status(200).json({ data: Posts })
 }
 
 exports.view = async (req, res) => {
-    if (!req.params.id) {
-        res.status(400).json({
-            msg: 'Id parametr is empty'
-        })
-    }
-    const post = await models.Posts.findOne({
-        include: [{
-            model: models.Categories,
-            attributes: ['id', 'title']
-        }],
-        attributes: ['id', 'title', 'content', 'img', 'info', ['createdAt', 'time']],
-        where: {
-            id: req.params.id
+    try {
+        if (check.variables(['id'], req.params, res)) {
+            const post = await models.Posts.findOne({
+                include: [{
+                    model: models.Categories,
+                    attributes: ['id', 'title']
+                }],
+                attributes: ['id', 'title', 'content', 'img', 'info', ['createdAt', 'time']],
+                where: {
+                    id: req.params.id
+                }
+            })
+            check.send(post, res)
         }
-
-    })
-    if (!post) {
-        res.status(400).json({
-            msg: "Posts undefine"
-        })
+    } catch (error) {
+        console.log(error)
     }
-    res.status(200).json(post)
+
 }
