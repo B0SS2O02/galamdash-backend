@@ -33,11 +33,23 @@ exports.list = async (req, res) => {
 exports.view = async (req, res) => {
     try {
         if (check.variables(['id'], req.params, res)) {
+            let where = {}
+            if (!!req.id) {
+                where['user'] = req.id
+            }
             const post = await models.Posts.findOne({
                 include: [{
                     model: models.Categories,
                     attributes: ['id', 'title']
-                }],
+                }, {
+                    model: models.Tags,
+                    attributes: ['id'],
+                }, {
+                    model: models.Likes,
+                    where: where,
+                    attributes: ['id', 'type']
+                }
+                ],
                 attributes: ['id', 'title', 'content', 'img', 'info', ['createdAt', 'time']],
                 where: {
                     id: req.params.id

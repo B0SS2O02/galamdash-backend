@@ -1,60 +1,52 @@
 const models = require('../../models')
-const jwt = require('jsonwebtoken')
+const check = require('./check')
 
-exports.verify = (req, res, next) => {
-    if (!req.headers.authorization === false) {
-        if (req.headers.authorization.split(' ')[0] === 'Bearer') {
-            const token = req.headers.authorization.split(' ')[1]
-            const { user_id, type } = jwt.verify(token, process.env.TOKEN_KEY)
-            let user = models.Users.findOne({
-                where: {
-                    id: user_id
+exports.add = async (req, res) => {
+    try {
+        if (check.variables(['id'], req, res,'You are not logined')) {
+            if (check.variables(['post', 'type'], req.body, res)) {
+                let post = await models.Posts.findOne({
+                    where: {
+                        id: req.body.post
+                    }
+                })
+                if (check.check(post, res)) {
+                    await models.Likes.create({
+                        post: req.body.post,
+                        user: req.id,
+                        type: req.body.type
+                    }).catch((err) => {
+                        res.status(500).json(err)
+                    }).then((result) => {
+                        res.json(result)
+                    })
                 }
-            })
-            if (!user) {
-                res.status(503).json({
-                    msg: 'You user undefine'
-                })
             }
-            if (user.ban) {
-                res.status(503).json({
-                    msg: 'You are baned'
-                })
-            }
-            req.id = user_id
-            req.type = type
-            next()
         }
+
+    } catch (error) {
+        console.log(error)
     }
 }
 
-exports.add = async (req, res) => {
-    if (!req.params.id) {
-        res.status(400).json({
-            msg: "Post id parametr is wrong"
+exports.del = async (req, res) => {
+    try {
+        check.variables(['post'], req.body, res)
+        check.variables(['id'], req, res, 'You are not logined')
+        const like = await models.Likes.destroy({
+            where: {
+                post: req.body.post,
+                user: req.id
+            }
         })
-    }
-    let post = await models.Posts.findOne({
-        where: {
-            id: req.params.id
+        if (like) {
+            res.json({ msg: 'Like deleted' })
+        } else {
+            res.json({ msg: 'Like not deleted' })
         }
-    })
-    if (!post) {
-        res.status(404).json({
-            msg: 'Post undefine'
-        })
+
+    } catch (error) {
+        console.log(error)
     }
-    let dislike = true
-    if (!req.body.dislike) {
-        dislike = false
-    }
-    const result = await models.Likes.create({
-        postId: req.params.id,
-        userId: req.id,
-        dislike: dislike
-    })
-    res.status(200).json({
-        data: result
-    })
 
 }

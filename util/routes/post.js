@@ -4,7 +4,7 @@ exports.path = {
             "tags": [
                 "Post"
             ],
-            "summary": "Get all Posts",
+            "summary": "Get list of Posts",
             "responses": {
                 "200": {
                     "description": "ok",
@@ -77,28 +77,6 @@ exports.path = {
                         "application/json": {
                             "schema": {
                                 "$ref": "#/definitions/Post"
-                            }
-                        }
-                    }
-
-                }
-            },
-            requestBody: {
-                required: true,
-                content: {
-                    "application/json": {
-                        schema: {
-                            "type": "object",
-                            "required": ["email", "password"],
-                            "properties": {
-                                email: {
-                                    type: 'string',
-                                    example: 'example@mail.com'
-                                },
-                                password: {
-                                    type: 'string',
-                                    example: '12345678'
-                                }
                             }
                         }
                     }
@@ -219,7 +197,53 @@ exports.models = {
                         example: "Proza"
                     }
                 }
+            },
+            "Tags": {
+                type: 'array',
+                items: {
+                    oneOf: [{
+                        type: 'object',
+                        properties: {
+                            "id": {
+                                type: 'integer',
+                                example: 2
+                            }
+                        }
+                    },{
+                        type: 'object',
+                        properties: {
+                            "id": {
+                                type: 'integer',
+                                example: 4
+                            }
+                        }
+                    },{
+                        type: 'object',
+                        properties: {
+                            "id": {
+                                type: 'integer',
+                                example: 6
+                            }
+                        }
+                    }]
+                }
+            }
+            ,
+            "Like": {
+                type: 'object',
+                properties: {
+                    "id": {
+                        type: 'integer',
+                        example: 1
+                    },
+                    "type": {
+                        type: 'string',
+                        example: "like"
+                    }
+                }
+
             }
         }
     }
+
 }

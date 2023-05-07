@@ -18,15 +18,18 @@ module.exports = (sequelize, DataTypes) => {
       Posts.hasMany(models.Categories, {
         as: "Posts"
       })
-
       Posts.belongsTo(models.Users, {
         foreignKey: "creatorId",
         onDelete: 'CASCADE'
       });
-      models.Users.hasMany(Posts)
+      models.Users.hasMany(Posts, {
+        foreignKey: "creatorId"
+      })
       Posts.hasMany(models.Users, {
         foreignKey: "creatorId"
       })
+
+
     }
   }
   Posts.init({

@@ -12,14 +12,23 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Unconfirmed.belongsTo(models.Categories, {
         foreignKey: "CategoryId",
+        sourceKey: "id",
         onDelete: 'SET NULL'
       });
       models.Categories.hasMany(Unconfirmed)
-
+      Unconfirmed.hasMany(models.Categories, {
+        as: "Unconfirmed"
+      })
       Unconfirmed.belongsTo(models.Users, {
+        foreignKey: "creatorId",
+        onDelete: 'CASCADE'
+      });
+      models.Users.hasMany(Unconfirmed, {
         foreignKey: "creatorId"
       })
-      models.Users.hasMany(Unconfirmed)
+      Unconfirmed.hasMany(models.Users, {
+        foreignKey: "creatorId"
+      })
     }
   }
   Unconfirmed.init({

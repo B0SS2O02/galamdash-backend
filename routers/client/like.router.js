@@ -6,6 +6,8 @@ const verify = require('../../controllers/client/verify.js');
 
 router.use(verify)
 
-router.post('/:id', Like.add)
+router.post('/', Like.add)
+
+router.delete('/', Like.del)
 
 module.exports = router;

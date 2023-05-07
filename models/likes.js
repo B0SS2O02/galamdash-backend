@@ -11,21 +11,29 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Likes.belongsTo(models.Posts, {
-        foreignKey: "postId"
+        foreignKey: "post"
       });
-      models.Posts.hasMany(Likes)
+      models.Posts.hasOne(Likes, {
+        foreignKey: "post"
+      })
+      Likes.hasOne(models.Posts, {
+        foreignKey: "post"
+      })
+
       Likes.belongsTo(models.Users, {
-        foreignKey: "userId"
+        foreignKey: "user"
       });
-      models.Users.hasMany(Likes)
+      models.Users.hasMany(Likes, {
+        foreignKey: "user"
+      })
     }
   }
   Likes.init({
-    postId: DataTypes.INTEGER,
-    userId: DataTypes.INTEGER,
-    dislike: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
+    post: DataTypes.INTEGER,
+    user: DataTypes.INTEGER,
+    type: {
+      type: DataTypes.STRING,
+      defaultValue: 'like'
     }
   }, {
     sequelize,

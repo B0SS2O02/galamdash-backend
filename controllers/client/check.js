@@ -22,3 +22,13 @@ exports.send = (variable, res, msg) => {
         res.json(variable)
     }
 }
+
+exports.check = (value, res, msg) => {
+    if (!value) {
+        res.status(400).json({
+            msg: msg || `${value} is empty or not define`
+        })
+        return false
+    }
+    return true
+}

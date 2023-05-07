@@ -1,38 +1,40 @@
 const models = require('../../models')
-
+const check = require('./check')
 
 exports.list = async (req, res) => {
-    let page = req.query.page - 1 || 0
-    const count = 10
-    const category = await models.Categories.findAll({
-        attributes: ['id', 'title'],
-        offset: page * count,
-        limit: count
-    })
-    res.status(200).json({ date: category })
+    try {
+        const page = req.query.page - 1 || 0
+        const count = req.query.count || 10
+        const category = await models.Categories.findAll({
+            attributes: ['id', 'title'],
+            offset: page * count,
+            limit: count
+        })
+        check.send(category, res)
+    } catch (error) {
+        console.log(error)
+    }
+
 }
 
 exports.view = async (req, res) => {
-    if (!req.params.id) {
-        res.status(400).json({
-            msg: 'Id parametr is empty'
-        })
-    }
-    const user = await models.Categories.findOne({
-        attributes: ['id', 'title'],
-        include: [{
-            model: models.Posts,
-            attributes: ['id', 'img', 'title','info']
-        }],
-        where: {
-            id: req.params.id
-        }
+    try {
+        if (check.variables(['id'], req.params, res)) {
+            const user = await models.Categories.findOne({
+                attributes: ['id', 'title'],
+                include: [{
+                    model: models.Posts,
+                    attributes: ['id', 'img', 'title', 'info']
+                }],
+                where: {
+                    id: req.params.id
+                }
 
-    })
-    if (!user) {
-        res.status(400).json({
-            msg: "Category undefine"
-        })
+            })
+            check.send(user, res)
+        }
+    } catch (error) {
+        console.error(error)
     }
-    res.status(200).json(user)
+
 }
