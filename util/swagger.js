@@ -6,10 +6,13 @@ const Unconfirmed = require('./routes/unconfirmed')
 const Like = require('./routes/like')
 const Comment = require('./routes/comment')
 const Views = require('./routes/view')
+const Draft = require('./routes/draft')
+const GreatWords = require('./routes/greatwords.js')
+const Reklama = require('./routes/reklama.js')
 
 require('dotenv')
 
-const imports = [Post, User, Tag, Catgeory, Unconfirmed, Like, Comment, Views]
+const imports = [Post, User, Tag, Catgeory, Unconfirmed, Like, Comment, Views, Draft, GreatWords, Reklama]
 let Path = {}
 for (let i in imports) {
     let value = imports[i].path

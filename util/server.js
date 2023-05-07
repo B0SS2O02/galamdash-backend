@@ -32,6 +32,9 @@ const Unconfirmed = require('../routers/client/unconfirmed.router.js')
 const Tag = require('../routers/client/tag.router.js')
 const Comment = require('../routers/client/comment.router.js')
 const View = require('../routers/client/view.router.js')
+const Draft = require('../routers/client/draft.router.js')
+const GreatWords = require('../routers/client/greatwords.router.js')
+const Reklama = require('../routers/client/reklama.router.js')
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
@@ -56,6 +59,9 @@ app.use('/api/unconfirmed', Unconfirmed)
 app.use('/api/tag', Tag)
 app.use('/api/comment', Comment)
 app.use('/api/view', View)
+app.use('/api/draft', Draft)
+app.use('/api/greatwords', GreatWords)
+app.use('/api/reklama', Reklama)
 
 app.use((req, res) => {
     res.status(404).send('404')
