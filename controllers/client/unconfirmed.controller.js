@@ -8,6 +8,7 @@ exports.create = async (req, res, next) => {
                 if (check.variables(['content', 'info', 'title', 'category'], req.body, res)) {
                     req.body.CategoryId = parseInt(req.body.category)
                     req.body.creatorId = req.id
+                    req.body.img = req.file.path
                     const unconfirmed = await models.Unconfirmed.create(
                         req.body
                     )
@@ -15,11 +16,12 @@ exports.create = async (req, res, next) => {
                         res.status(500).json({
                             msg: 'Unconfirmed is not create'
                         })
-                        next()
+                    } else {
+                        res.json({
+                            msg: `Unconfirmed id is : ${unconfirmed.id}`
+                        })
                     }
-                    res.json({
-                        msg: `Unconfirmed id is : ${unconfirmed.id}`
-                    })
+
                 }
         }
 
