@@ -5,10 +5,11 @@ const Catgeory = require('./routes/category')
 const Unconfirmed = require('./routes/unconfirmed')
 const Like = require('./routes/like')
 const Comment = require('./routes/comment')
+const Views = require('./routes/view')
 
 require('dotenv')
 
-const imports = [Post, User, Tag, Catgeory, Unconfirmed, Like, Comment]
+const imports = [Post, User, Tag, Catgeory, Unconfirmed, Like, Comment, Views]
 let Path = {}
 for (let i in imports) {
     let value = imports[i].path
