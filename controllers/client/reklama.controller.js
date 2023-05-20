@@ -8,7 +8,7 @@ exports.list = async (req, res) => {
                 where: {
                     position: req.params.position
                 },
-                attributes: ['id', 'link', 'img']
+                attributes: ['id', 'link', 'img','title']
             })
             res.json(Reklama)
         }

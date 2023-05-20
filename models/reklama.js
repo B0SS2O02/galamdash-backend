@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   Reklama.init({
     img: DataTypes.STRING,
     link: DataTypes.STRING,
+    title: DataTypes.STRING,
     position: DataTypes.INTEGER
   }, {
     sequelize,

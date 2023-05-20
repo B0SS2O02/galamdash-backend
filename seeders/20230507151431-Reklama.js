@@ -16,24 +16,28 @@ module.exports = {
       img: 'public/images/default_avatar.jpg',
       link: 'example',
       position: 1,
+      title:'title1',
       createdAt: new Date(),
       updatedAt: new Date(),
     },{
       img: 'public/images/default_avatar.jpg',
       link: 'example',
       position: 1,
+      title:'title2',
       createdAt: new Date(),
       updatedAt: new Date(),
     },{
       img: 'public/images/default_avatar.jpg',
       link: 'example',
       position: 1,
+      title:'title',
       createdAt: new Date(),
       updatedAt: new Date(),
     },{
       img: 'public/images/default_avatar.jpg',
       link: 'example',
       position: 1,
+      title:'title',
       createdAt: new Date(),
       updatedAt: new Date(),
     },{

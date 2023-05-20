@@ -15,6 +15,9 @@ module.exports = {
       link: {
         type: Sequelize.STRING
       },
+      title: {
+        type: Sequelize.STRING
+      },
       position: {
         type: Sequelize.INTEGER
       },

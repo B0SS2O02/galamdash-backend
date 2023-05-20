@@ -2,7 +2,6 @@ const models = require('../../models')
 const jwt = require('jsonwebtoken')
 
 module.exports = async (req, res, next) => {
-    console.log('token', req.headers)
     const token = req.headers.authorization || false
     if (token) {
         try {
@@ -26,7 +25,6 @@ module.exports = async (req, res, next) => {
 
         } catch (error) {
             res.status(401).json({ msg: "Your token has expired" })
-            next()
         }
     }
     next()

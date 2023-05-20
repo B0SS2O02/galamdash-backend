@@ -31,13 +31,20 @@ exports.view = async (req, res) => {
 }
 exports.list = async (req, res) => {
     try {
+        const all = req.query.all || false
         const page = req.params.page - 1 || 0
         const count = req.params.count || 10
-        const Tags = await models.TagLists.findAll({
+        let content = {
             attributes: ['id', 'title'],
             offset: page * count,
             limit: count
-        })
+        }
+        if (all) {
+            content = {
+                attributes: ['id', 'title'],
+            }
+        }
+        const Tags = await models.TagLists.findAll(content)
         res.json(Tags)
     } catch (error) {
         console.log(error)

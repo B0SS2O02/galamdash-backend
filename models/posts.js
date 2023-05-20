@@ -14,19 +14,22 @@ module.exports = (sequelize, DataTypes) => {
         sourceKey: "id",
         onDelete: 'SET NULL'
       });
-      models.Categories.hasMany(Posts)
+      models.Categories.hasMany(Posts, { foreignKey: "CategoryId", })
       Posts.hasMany(models.Categories, {
-        as: "Posts"
+        as: "Posts",
+        foreignKey: "CategoryId",
       })
       Posts.belongsTo(models.Users, {
         foreignKey: "creatorId",
         onDelete: 'CASCADE'
       });
       models.Users.hasMany(Posts, {
-        foreignKey: "creatorId"
+        foreignKey: "creatorId",
+        onDelete: 'CASCADE'
       })
       Posts.hasMany(models.Users, {
-        foreignKey: "creatorId"
+        foreignKey: "creatorId",
+        onDelete: 'CASCADE'
       })
 
 

@@ -72,7 +72,11 @@ exports.path = {
                                     type: 'string',
                                     example: 'example@mail.com'
                                 },
-                                password: {
+                                password1: {
+                                    type: 'string',
+                                    example: '12345678'
+                                },
+                                password2: {
                                     type: 'string',
                                     example: '12345678'
                                 },
@@ -83,6 +87,10 @@ exports.path = {
                                 surname: {
                                     type: 'string',
                                     example: 'Surname'
+                                },
+                                nick: {
+                                    type: 'string',
+                                    example: 'Nick'
                                 }
                             }
                         }
@@ -93,15 +101,12 @@ exports.path = {
 
 
     },
-    "/api/user/cabinet/{id}": {
+    "/api/user/own/{id}": {
         get: {
             tags: [
                 "User"
             ],
             summary: "Get user information",
-            security: [{
-                Auth: []
-            }],
             responses: {
                 "200": {
                     description: "OK",
@@ -125,6 +130,29 @@ exports.path = {
                     }
                 }
             ]
+        }
+    },
+    "/api/user/my": {
+        get: {
+            tags: [
+                "User"
+            ],
+            security: [{
+                Auth: []
+            }],
+            summary: "Get user information",
+            responses: {
+                "200": {
+                    description: "OK",
+                    content: {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/Cabinet1"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "/api/user/edit": {

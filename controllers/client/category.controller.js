@@ -19,20 +19,25 @@ exports.list = async (req, res) => {
 
 exports.view = async (req, res) => {
     try {
-        if (check.variables(['id'], req.params, res)) {
-            const user = await models.Categories.findOne({
-                attributes: ['id', 'title'],
-                include: [{
-                    model: models.Posts,
-                    attributes: ['id', 'img', 'title', 'info']
-                }],
-                where: {
-                    id: req.params.id
-                }
+        const user = await models.Categories.findOne({
+            attributes: ['id', 'title'],
+            include: [{
+                model: models.Posts,
+                attributes: ['id', 'img','content', 'title', 'info', ['createdAt', 'time']],
+                include:[{
+                    model:models.Tags,
+                },{
+                    model:models.Users, 
+                    attributes:['id','nick','email','img']
+                }]
+            }],
+            where: {
+                id: req.params.id
+            }
 
-            })
-            check.send(user, res)
-        }
+        })
+        check.send(user, res)
+
     } catch (error) {
         console.error(error)
     }

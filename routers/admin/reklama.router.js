@@ -1,9 +1,11 @@
-const express = require('express');
-const router = express.Router();
-const User = require('../../controllers/client/users.controller.js')
+const verify = require('../../controllers/admin/verify')
+
+const router = require('express').Router()
+
+const Reklama = require('../../controllers/admin/reklama.controller')
 
 const multer = require('multer');
-const verify = require('../../controllers/client/verify.js')
+
 const storageConfig = multer.diskStorage({
     destination: (req, res, cb) => {
         cb(null, './public/images')
@@ -20,23 +22,18 @@ const fileFilter = (req, file, cb) => {
         cb(null, false)
     }
 }
-
 const upload = multer({ storage: storageConfig, fileFilter: fileFilter })
 
 router.use(verify)
 
-router.post('/login', User.login)
+router.get('/', Reklama.list)
 
-router.post('/registry', User.registry)
+router.get('/:id', Reklama.view)
 
-router.get('/my', User.my)
+router.post('/', upload.single('img'), Reklama.add)
 
-router.get('/own/:id', User.user)
+router.put('/:id', upload.single('img'), Reklama.edit)
 
-router.put('/image', upload.single('image'), User.image)
+router.delete('/:id', Reklama.del)
 
-router.put('/edit', User.edit)
-
-
-
-module.exports = router;
+module.exports = router

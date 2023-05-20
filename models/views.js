@@ -12,7 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Views.belongsTo(models.Posts, {
-        foreignKey: 'post'
+        foreignKey: 'post',
+        onDelete: 'CASCADE'
       })
       models.Posts.hasMany(Views, {
         foreignKey: 'post'
@@ -33,10 +34,12 @@ module.exports = (sequelize, DataTypes) => {
   }
   Views.init({
     post: DataTypes.INTEGER,
-    user: DataTypes.INTEGER
+    user: DataTypes.INTEGER,
+    time: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'Views',
   });
+
   return Views;
 };

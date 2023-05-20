@@ -15,16 +15,19 @@ module.exports = {
     await queryInterface.bulkInsert('Views', [{
       user: 1,
       post: 1,
+      time: new Date(),
       createdAt: new Date(),
       updatedAt: new Date(),
     }, {
       user: 1,
       post: 2,
+      time: new Date(),
       createdAt: new Date(),
       updatedAt: new Date(),
     }, {
       user: 2,
       post: 1,
+      time: new Date(),
       createdAt: new Date(),
       updatedAt: new Date(),
     }], {});

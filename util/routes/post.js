@@ -95,6 +95,28 @@ exports.path = {
             }
         ]
     },
+    '/api/search': {
+        get: {
+            tags: ['Post'],
+            summary: 'Posts search',
+            "responses": {
+                "200": {
+                    "description": "ok",
+                }
+            }
+        },
+        parameters: [
+            {
+                in: 'query',
+                name: 'word',
+                required: true,
+                description: 'Search title',
+                schema: {
+                    type: 'string'
+                }
+            }
+        ]
+    }
 }
 
 exports.models = {
@@ -209,7 +231,7 @@ exports.models = {
                                 example: 2
                             }
                         }
-                    },{
+                    }, {
                         type: 'object',
                         properties: {
                             "id": {
@@ -217,7 +239,7 @@ exports.models = {
                                 example: 4
                             }
                         }
-                    },{
+                    }, {
                         type: 'object',
                         properties: {
                             "id": {

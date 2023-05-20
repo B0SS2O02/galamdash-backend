@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Tags.belongsTo(models.Posts, {
-        foreignKey: 'post'
+        foreignKey: 'post',
+        onDelete: 'CASCADE'
       });
       models.Posts.hasMany(Tags, {
         foreignKey: 'post'
@@ -21,7 +22,8 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       Tags.belongsTo(models.TagLists, {
-        foreignKey: 'tag'
+        foreignKey: 'tag',
+        onDelete: 'CASCADE'
       });
       models.TagLists.hasMany(Tags, {
         foreignKey: 'tag'

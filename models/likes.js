@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Likes.belongsTo(models.Posts, {
-        foreignKey: "post"
+        foreignKey: "post",
+        onDelete: 'CASCADE'
       });
       models.Posts.hasOne(Likes, {
         foreignKey: "post"
@@ -21,7 +22,8 @@ module.exports = (sequelize, DataTypes) => {
       })
 
       Likes.belongsTo(models.Users, {
-        foreignKey: "user"
+        foreignKey: "user",
+        onDelete: 'CASCADE'
       });
       models.Users.hasMany(Likes, {
         foreignKey: "user"

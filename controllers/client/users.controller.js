@@ -15,7 +15,7 @@ exports.login = AsyncHandler(async (req, res) => {
             } else if (user.ban) {
                 res.status(403).json({ msg: 'You are banned' })
             } else if (!await bcrypt.compare(req.body.password, user.password)) {
-                return res.status(400).json({ msg: "Password is wrong" })
+                res.status(400).json({ msg: "Password is wrong" })
             } else {
                 const token = await jwt.sign(
                     { user_id: user.id, type: user.type },
@@ -40,36 +40,59 @@ exports.login = AsyncHandler(async (req, res) => {
 
 exports.registry = async (req, res) => {
     try {
-        if (check.variables(['email', 'password', 'name', 'surname'], req.body, res)) {
-            const oldUser = await models.Users.findOne({
-                where: {
-                    email: req.body.email
-                }
-            })
-            if (oldUser) {
-                res.status(400).json({ msg: "Email Already Exist" });
+        if (check.variables(['email', 'password1', 'password2', 'name', 'surname', 'nick'], req.body, res)) {
+            if (req.body.password1 !== req.body.password2) {
+                res.status(400).json({
+                    msg: 'Passwords not equal'
+                })
+            } else if (req.body.password1.length < 8) {
+                res.status(400).json({
+                    msg: 'Number of letters in less than 8'
+                })
             } else {
-                const encryptedUserPassword = await bcrypt.hash(req.body.password, 10);
-                const user = await models.Users.create({
-                    nick: `${req.body.name} ${req.body.surname}`,
-                    name: req.body.name,
-                    surname: req.body.surname,
-                    email: req.body.email.toLowerCase(),
-                    password: encryptedUserPassword,
-                });
-                const token = jwt.sign(
-                    { user_id: user.id, type: user.type },
-                    process.env.TOKEN_KEY,
-                    {
-                        expiresIn: "5h",
+                const oldUser = await models.Users.findOne({
+                    where: {
+                        [models.Sequelize.Op.or]: [
+                            { email: req.body.email },
+                            { nick: req.body.nick }
+                        ]
                     }
-                );
-                res.json({
-                    image: user.img,
-                    nick: user.nick,
-                    type: user.type,
-                    token: token
-                });
+                })
+                if (!!oldUser) {
+                    if (oldUser.nick == req.body.nick) {
+                        res.status(400).json({
+                            msg: 'This nick is have'
+                        })
+                    } else if (oldUser.email == req.body.email) {
+                        res.status(400).json({
+                            msg: 'This email is have'
+                        })
+                    }
+                } else {
+                    const encryptedUserPassword = await bcrypt.hash(req.body.password1, 10);
+                    const user = await models.Users.create({
+                        name: req.body.name,
+                        surname: req.body.surname,
+                        email: req.body.email.toLowerCase(),
+                        nick: req.body.nick,
+                        password: encryptedUserPassword,
+                    });
+                    const token = jwt.sign(
+                        { user_id: user.id, type: user.type },
+                        process.env.TOKEN_KEY,
+                        {
+                            expiresIn: "5h",
+                        }
+                    );
+
+                    res.json({
+                        image: user.img,
+                        nick: user.nick,
+                        type: user.type,
+                        token: token
+                    });
+                    console.log(res.json)
+                }
             }
         }
     } catch (error) {
@@ -79,7 +102,7 @@ exports.registry = async (req, res) => {
 }
 
 
-exports.cabinet = async (req, res) => {
+exports.user = async (req, res) => {
     try {
         if (check.variables(['id'], req.params, res)) {
             let user = await models.Users.findOne({
@@ -92,34 +115,50 @@ exports.cabinet = async (req, res) => {
                     msg: 'Account not define'
                 })
             } else {
-                let data
-                if (req.params.id == req.id) {
-                    data = {
-                        nick: user.nick,
-                        name: user.name,
-                        surname: user.surname,
-                        img: user.img,
-                        info: user.info,
-                        ball: user.ball,
-                        email: user.email,
-                        type: process.env.Types.split(' ')[user.type]
-                    }
-                } else {
-                    data = {
-                        nick: user.nick,
-                        img: user.img,
-                        info: user.info,
-                        ball: user.ball,
-                        email: user.email
-                    }
-                }
-                res.status(200).json(data)
+                res.status(200).json({
+                    nick: user.nick,
+                    img: user.img,
+                    info: user.info,
+                    ball: user.ball,
+                    email: user.email
+                })
             }
         }
     } catch (error) {
         console.log(error)
     }
 }
+
+exports.my = async (req, res) => {
+    try {
+        if (check.variables(['id'], req, res)) {
+            let user = await models.Users.findOne({
+                where: {
+                    id: req.id
+                }
+            })
+            if (!user) {
+                res.status(404).json({
+                    msg: 'Account not define'
+                })
+            } else {
+                res.status(200).json({
+                    nick: user.nick,
+                    name: user.name,
+                    surname: user.surname,
+                    img: user.img,
+                    info: user.info,
+                    ball: user.ball,
+                    email: user.email,
+                    type: process.env.Types.split(' ')[user.type]
+                })
+            }
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 
 exports.image = async (req, res) => {
     try {

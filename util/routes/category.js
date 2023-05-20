@@ -65,7 +65,6 @@ exports.path = {
                 "in": "path",
                 "name": "id",
                 "description": "ID of category",
-                "required": true,
                 "schema": {
                     "type": "integer"
                 }
