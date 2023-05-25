@@ -33,9 +33,9 @@ exports.list = async (req, res) => {
                     model: models.TagLists,
                     attributes: ['id', 'title']
                 }
-            } , {
+            }, {
                 model: models.Users,
-                attributes:['id','nick','email','img']
+                attributes: ['id', 'nick', 'email', 'img']
             }],
             offset: page * count,
             limit: count
@@ -94,6 +94,9 @@ exports.view = async (req, res) => {
                     model: models.Likes,
                     where: where,
                     attributes: ['id', 'type']
+                }, {
+                    model: models.Users,
+                    attributes: ['id', 'nick', 'email', 'img']
                 }
                 ],
                 attributes: ['id', 'title', 'content', 'img', 'info', ['createdAt', 'time']],
@@ -121,6 +124,41 @@ exports.search = async (req, res) => {
             })
             res.json(posts)
         }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+exports.random = async (req, res) => {
+    try {
+        const post_ids = await models.Posts.findAll({
+            attributes: ['id']
+        })
+        let ids = []
+        while (ids.length < 11) {
+            ids.push(post_ids[Math.floor(Math.random() * post_ids.length)].id)
+        }
+        const posts = await models.Posts.findAll({
+            where: {
+                id: ids
+            },
+            attributes: ['id', 'title', 'img', 'content', 'info', ['createdAt', 'time']],
+            order: [
+                ['id', 'DESC'],
+            ],
+            include: [{
+                model: models.Tags,
+                attributes: ['id'],
+                include: {
+                    model: models.TagLists,
+                    attributes: ['id', 'title']
+                }
+            }, {
+                model: models.Users,
+                attributes: ['id', 'nick', 'email', 'img']
+            }],
+        })
+        res.json(posts)
     } catch (error) {
         console.log(error)
     }
