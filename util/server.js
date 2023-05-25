@@ -84,7 +84,16 @@ app.use('/api/reklama', Reklama)
 app.use('/api/search', Search)
 
 app.use((req, res, next) => {
-    console.log('404')
+    console.log({
+        time: Date(new Date()),
+        ip: req.ip,
+        header: req.headers,
+        method: req.method,
+        path: req.path,
+        body: req.body,
+        query: req.query,
+        params: req.params,
+    })
     res.status(404).send('404')
     next()
 })
