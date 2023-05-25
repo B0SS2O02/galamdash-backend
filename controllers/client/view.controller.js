@@ -15,19 +15,4 @@ exports.list = async (req, res) => {
         })
         check.send(view, res)
     }
-<<<<<<< HEAD
-=======
-}
-
-exports.view = async (req, res) => {
-    if (check.variables(['id'], req.params, res)) {
-        const count = await models.Views.findAll({
-            attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
-            where: {
-                post: req.params.id
-            }
-        })
-        res.json(count)
-    }
->>>>>>> master
 }

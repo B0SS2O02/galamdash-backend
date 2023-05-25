@@ -13,8 +13,4 @@ router.get('/:id', Post.view)
 
 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> master
 module.exports = router;

@@ -3,11 +3,7 @@ const check = require('./check')
 
 exports.add = async (req, res) => {
     try {
-<<<<<<< HEAD
         if (check.variables(['id'], req, res,'You are not logined')) {
-=======
-        if (check.variables(['id'], req, res, 'You are not logined')) {
->>>>>>> master
             if (check.variables(['post', 'type'], req.body, res)) {
                 let post = await models.Posts.findOne({
                     where: {
@@ -35,7 +31,6 @@ exports.add = async (req, res) => {
 
 exports.del = async (req, res) => {
     try {
-<<<<<<< HEAD
         check.variables(['post'], req.body, res)
         check.variables(['id'], req, res, 'You are not logined')
         const like = await models.Likes.destroy({
@@ -50,44 +45,8 @@ exports.del = async (req, res) => {
             res.json({ msg: 'Like not deleted' })
         }
 
-=======
-        if (check.variables(['post'], req.body, res)) {
-            if (check.variables(['id'], req, res, 'You are not logined')) {
-                const like = await models.Likes.destroy({
-                    where: {
-                        post: req.body.post,
-                        user: req.id
-                    }
-                })
-                if (like) {
-                    res.json({ msg: 'Like deleted' })
-                } else {
-                    res.json({ msg: 'Like not deleted' })
-                }
-            }
-        }
->>>>>>> master
     } catch (error) {
         console.log(error)
     }
 
-<<<<<<< HEAD
-=======
-}
-
-exports.view = async (req, res) => {
-    try {
-        if (check.variables(['id'], req.params, res)) {
-            const count = await models.Likes.findOne({
-                attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
-                where: {
-                    post: req.params.id
-                }
-            })
-            res.json(count)
-        }
-    } catch (error) {
-        console.log(error)
-    }
->>>>>>> master
 }
