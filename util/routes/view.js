@@ -12,5 +12,32 @@ exports.path = {
                 }
             }
         }
+<<<<<<< HEAD
+=======
+    },
+    '/api/view/{id}': {
+        get: {
+            tags: [
+                'Post'
+            ],
+            summary: 'Get views count of post',
+            responses: {
+                "200": {
+                    description: 'OK'
+                }
+            }
+        },
+        parameters: [
+            {
+                in: 'path',
+                name: "id",
+                description: 'Post ID',
+                required: true,
+                schema: {
+                    type: 'integer'
+                }
+            }
+        ]
+>>>>>>> master
     }
 }

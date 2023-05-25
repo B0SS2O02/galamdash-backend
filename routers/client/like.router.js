@@ -10,4 +10,9 @@ router.post('/', Like.add)
 
 router.delete('/', Like.del)
 
+<<<<<<< HEAD
+=======
+router.get('/:id', Like.view)
+
+>>>>>>> master
 module.exports = router;

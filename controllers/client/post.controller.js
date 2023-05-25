@@ -33,9 +33,15 @@ exports.list = async (req, res) => {
                     model: models.TagLists,
                     attributes: ['id', 'title']
                 }
+<<<<<<< HEAD
             } , {
                 model: models.Users,
                 attributes:['id','nick','email','img']
+=======
+            }, {
+                model: models.Users,
+                attributes: ['id', 'nick', 'email', 'img']
+>>>>>>> master
             }],
             offset: page * count,
             limit: count
@@ -94,6 +100,12 @@ exports.view = async (req, res) => {
                     model: models.Likes,
                     where: where,
                     attributes: ['id', 'type']
+<<<<<<< HEAD
+=======
+                }, {
+                    model: models.Users,
+                    attributes: ['id', 'nick', 'email', 'img']
+>>>>>>> master
                 }
                 ],
                 attributes: ['id', 'title', 'content', 'img', 'info', ['createdAt', 'time']],
@@ -124,4 +136,8 @@ exports.search = async (req, res) => {
     } catch (error) {
         console.log(error)
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> master
