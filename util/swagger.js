@@ -9,18 +9,10 @@ const Views = require('./routes/view')
 const Draft = require('./routes/draft')
 const GreatWords = require('./routes/greatwords.js')
 const Reklama = require('./routes/reklama.js')
-<<<<<<< HEAD
 
 require('dotenv')
 
 const imports = [Post, User, Tag, Catgeory, Unconfirmed, Like, Comment, Views, Draft, GreatWords, Reklama]
-=======
-const Count = require('./routes/count')
-
-require('dotenv')
-
-const imports = [Post, User, Tag, Catgeory, Unconfirmed, Like, Comment, Views, Draft, GreatWords, Reklama, Count]
->>>>>>> master
 let Path = {}
 for (let i in imports) {
     let value = imports[i].path
@@ -62,11 +54,6 @@ module.exports = {
             }
         }
     },
-<<<<<<< HEAD
     "paths": Path,
     "definitions": Model
-=======
-    paths: Path,
-    definitions: Model
->>>>>>> master
 }
