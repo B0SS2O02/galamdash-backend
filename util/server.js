@@ -88,7 +88,7 @@ app.use('/api/greatwords', GreatWords)
 app.use('/api/reklama', Reklama)
 app.use('/api/search', Search)
 app.use('/api/random', Random)
-
+app.use('/api/count', Count)
 
 app.use((req, res, next) => {
     console.log({
@@ -103,7 +103,7 @@ app.use((req, res, next) => {
     })
 })
 
-app.use('/api/count', Count)
+
 
 app.use((req, res, next) => {
     console.log('404')

@@ -26,13 +26,20 @@ exports.list = async (req, res) => {
         const Posts = await models.Posts.findAll({
             where: where,
             attributes: ['id', 'title', 'img', 'content', 'info', ['createdAt', 'time']],
+            order: [
+                ['id', 'DESC'],
+            ],
             include: [{
                 model: models.Tags,
+
                 attributes: ['id'],
                 include: {
                     model: models.TagLists,
                     attributes: ['id', 'title']
                 }
+            }, {
+                model: models.Users,
+                attributes: ['id', 'nick', 'email', 'img']
             }, {
                 model: models.Users,
                 attributes: ['id', 'nick', 'email', 'img']

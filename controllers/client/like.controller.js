@@ -3,7 +3,7 @@ const check = require('./check')
 
 exports.add = async (req, res) => {
     try {
-        if (check.variables(['id'], req, res,'You are not logined')) {
+        if (check.variables(['id'], req, res, 'You are not logined')) {
             if (check.variables(['post', 'type'], req.body, res)) {
                 let post = await models.Posts.findOne({
                     where: {
@@ -48,5 +48,12 @@ exports.del = async (req, res) => {
     } catch (error) {
         console.log(error)
     }
+}
 
+exports.list = async () => {
+    try {
+        
+    } catch (error) {
+        console.log(error)
+    }
 }
