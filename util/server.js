@@ -38,6 +38,8 @@ const Draft = require('../routers/client/draft.router.js')
 const GreatWords = require('../routers/client/greatwords.router.js')
 const Reklama = require('../routers/client/reklama.router.js')
 const Search = require('../routers/client/search.router.js')
+const Count = require('../routers/client/counts.router')
+
 
 app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
@@ -82,6 +84,7 @@ app.use('/api/draft', Draft)
 app.use('/api/greatwords', GreatWords)
 app.use('/api/reklama', Reklama)
 app.use('/api/search', Search)
+app.use('/api/count', Count)
 
 app.use((req, res, next) => {
     console.log('404')

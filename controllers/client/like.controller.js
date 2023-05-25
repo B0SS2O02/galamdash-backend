@@ -46,10 +46,6 @@ exports.del = async (req, res) => {
                 }
             }
         }
-
-
-
-
     } catch (error) {
         console.log(error)
     }
@@ -59,7 +55,7 @@ exports.del = async (req, res) => {
 exports.view = async (req, res) => {
     try {
         if (check.variables(['id'], req.params, res)) {
-            const count = await models.Likes.findAll({
+            const count = await models.Likes.findOne({
                 attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
                 where: {
                     post: req.params.id

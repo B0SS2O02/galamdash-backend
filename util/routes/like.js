@@ -67,6 +67,30 @@ exports.path = {
         }
 
     },
+    '/api/like/{id}': {
+        get: {
+            tags: [
+                'Post'
+            ],
+            summary: 'Get like count of post',
+            responses: {
+                "200": {
+                    description: 'OK'
+                }
+            }
+        },
+        parameters: [
+            {
+                in: 'path',
+                name: "id",
+                description: 'Post ID',
+                required: true,
+                schema: {
+                    type: 'integer'
+                }
+            }
+        ]
+    }
 
 
 }
