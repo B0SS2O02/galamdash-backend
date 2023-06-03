@@ -20,6 +20,12 @@ module.exports = (sequelize, DataTypes) => {
       Comments.hasMany(models.Posts, {
         foreignKey: 'post'
       });
+      Comments.belongsTo(models.Users, {
+        foreignKey: 'user'
+      })
+      models.Users.hasMany(Comments, {
+        foreignKey: 'user'
+      })
     }
   }
   Comments.init({

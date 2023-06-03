@@ -50,10 +50,20 @@ exports.del = async (req, res) => {
     }
 }
 
-exports.list = async () => {
-    try {
-        
-    } catch (error) {
-        console.log(error)
+
+exports.list = async (req, res) => {
+    if (check.variables(['id'], req, res, 'You are not logineв')) {
+        const view = await models.Likes.findAll({
+            where: {
+                user: req.id,
+                type: 'like'
+            },
+            attributes: ['id', ['updatedAt', 'time']],
+            include: {
+                model: models.Posts,
+                attributes: ['id', 'title', 'content', 'img']
+            }
+        })
+        check.send(view, res)
     }
 }

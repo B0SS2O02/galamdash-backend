@@ -31,7 +31,6 @@ exports.list = async (req, res) => {
             ],
             include: [{
                 model: models.Tags,
-
                 attributes: ['id'],
                 include: {
                     model: models.TagLists,
@@ -127,7 +126,25 @@ exports.search = async (req, res) => {
                     title: {
                         [models.Sequelize.Op.like]: `${req.query.word}%`
                     }
-                }
+                },
+                attributes: ['id', 'title', 'img', 'content', 'info', ['createdAt', 'time']],
+                order: [
+                    ['id', 'DESC'],
+                ],
+                include: [{
+                    model: models.Tags,
+                    attributes: ['id'],
+                    include: {
+                        model: models.TagLists,
+                        attributes: ['id', 'title']
+                    }
+                }, {
+                    model: models.Users,
+                    attributes: ['id', 'nick', 'email', 'img']
+                }, {
+                    model: models.Users,
+                    attributes: ['id', 'nick', 'email', 'img']
+                }],
             })
             res.json(posts)
         }

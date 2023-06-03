@@ -20,7 +20,7 @@ module.exports = {
       },
       img: {
         type: Sequelize.STRING,
-        defaultValue: 'public/images/default_avatar.jpg'
+        defaultValue: ''
       },
       info: {
         type: Sequelize.TEXT,

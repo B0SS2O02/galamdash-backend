@@ -64,9 +64,20 @@ exports.path = {
                 }
             }
 
+        },
+        'get': {
+            tags: ['Like'],
+            summary: 'List of user likes',
+            security: [{
+                Auth: []
+            }],
+            responses: {
+                '200': {
+                    description: "OK"
+                }
+            }
         }
 
-    },
-
+    }
 
 }

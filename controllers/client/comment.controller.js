@@ -2,38 +2,47 @@ const models = require('../../models')
 const check = require('./check')
 
 exports.list = async (req, res) => {
-    check.variables(['id'], req.params, res)
-    const com = await models.Comments.findAll({
-        attributes: ['id', 'user', 'content', 'parent', ['createdAt', 'time']],
-        where: {
-            post: req.params.id
-        }
-    })
-    let comments = []
-    for (let i = 0; i < com.length; i++) {
-        if (!c.parent) {
-            comments.push({
-                id: c.id,
-                user: c.user,
-                content: c.content,
-                time: c.time,
-                comments: []
-            })
-        } else {
-            for (let j = 0; j < comments.length; j++) {
-                let c2 = comments[j]
-                if (c.parent === c2.id) {
-                    comments[j]['comments'].push({
-                        id: c.id,
-                        user: c.user,
-                        content: c.content,
-                        time: c.time,
-                    })
+    if (check.variables(['id'], req.params, res)) {
+        const com = await models.Comments.findAll({
+            attributes: ['id', 'user', 'content', 'parent', ['createdAt', 'time']],
+            include: [
+                {
+                    model: models.Users,
+                    attributes: ['id', 'nick', 'email', 'img']
+                }
+            ],
+            where: {
+                post: req.params.id
+            }
+        })
+        let comments = []
+        for (let i = 0; i < com.length; i++) {
+            const c = com[i]
+            if (!c.parent) {
+                comments.push({
+                    id: c.id,
+                    user: c.User,
+                    content: c.content,
+                    time: c.time,
+                    comments: []
+                })
+            } else {
+                for (let j = 0; j < comments.length; j++) {
+                    let c2 = comments[j]
+                    if (c.parent === c2.id) {
+                        comments[j]['comments'].push({
+                            id: c.id,
+                            user: c.User,
+                            content: c.content,
+                            time: c.time,
+                        })
+                    }
                 }
             }
         }
+        res.json(comments)
     }
-    res.json(comments)
+
 }
 
 exports.add = async (req, res) => {
