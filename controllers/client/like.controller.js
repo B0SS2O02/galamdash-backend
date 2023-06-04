@@ -50,10 +50,36 @@ exports.del = async (req, res) => {
     }
 }
 
-exports.list = async () => {
-    try {
-        
-    } catch (error) {
-        console.log(error)
+
+exports.list = async (req, res) => {
+    if (check.variables(['id'], req, res, 'You are not logineв')) {
+        const like = await models.Likes.findAll({
+            where: {
+                user: req.id,
+                type: 'like'
+            },
+            attributes: ['id', ['updatedAt', 'time']],
+            include: {
+                model: models.Posts,
+                attributes: ['id', 'title', 'img', 'content', 'info', ['createdAt', 'time']],
+                include: [{
+                    model: models.Tags,
+                    attributes: ['id'],
+                    include: {
+                        model: models.TagLists,
+                        attributes: ['id', 'title']
+                    }
+                }, {
+                    model: models.Users,
+                    attributes: ['id', 'nick', 'email', 'img']
+                }],
+            }   
+        })
+        let Like=[]
+        for (let i = 0; i < like.length; i++) {
+            Like.push(like[i].Post)
+        }
+
+        check.send(Like, res)
     }
 }

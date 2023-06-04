@@ -9,38 +9,30 @@ const models = require('../models')
 const swaggerUi = require("swagger-ui-express")
 const swaggerDoc = require("./swagger");
 
+
+
+const server = require('http').createServer(app)
+
+const socket = require('./socket.io.js')
+
+socket.io(server)
+
 // Cors
 const corsOptions = {
-    origin: '*',
+    origin: process.env.ClientServer,
 }
 app.use(cors(corsOptions))
 
 // Routes
-const Admin = require('../routers/admin/admin.router.js')
-const AdminUsers = require('../routers/admin/users.router.js')
-const AdminCategory = require('../routers/admin/category.router.js')
-const AdminLike = require('../routers/admin/like.router.js')
-const AdminPost = require('../routers/admin/post.router.js')
-const AdminUnconfirmed = require('../routers/admin/unconfirmed.router.js')
-const AdminReklama = require('../routers/admin/reklama.router.js')
-const AdminGreatWords = require('../routers/admin/greatwords.router.js')
-const AdminTags = require('../routers/admin/tags.router.js')
 
-const User = require('../routers/client/users.router.js')
-const Category = require('../routers/client/category.router.js')
-const Like = require('../routers/client/like.router.js')
-const Posts = require('../routers/client/post.router.js')
-const Unconfirmed = require('../routers/client/unconfirmed.router.js')
-const Tag = require('../routers/client/tag.router.js')
-const Comment = require('../routers/client/comment.router.js')
-const View = require('../routers/client/view.router.js')
-const Draft = require('../routers/client/draft.router.js')
-const GreatWords = require('../routers/client/greatwords.router.js')
-const Reklama = require('../routers/client/reklama.router.js')
-const Search = require('../routers/client/search.router.js')
-const Random = require('../routers/client/random.router')
 
-const Count = require('../routers/client/counts.router')
+
+// Socket(io)
+
+
+const adminRouters = require('../routers/admin')
+
+const clientRoutes = require('../routers/client')
 
 
 
@@ -63,32 +55,32 @@ app.use((req, res, next) => {
 })
 
 // Admin routes
-app.use('/admin/admin', Admin)
-app.use('/admin/user', AdminUsers)
-app.use('/admin/category', AdminCategory)
-app.use('/admin/like', AdminLike)
-app.use('/admin/post', AdminPost)
-app.use('/admin/unconfirmed', AdminUnconfirmed)
-app.use('/admin/reklama', AdminReklama)
-app.use('/admin/greatwords', AdminGreatWords)
-app.use('/admin/tag', AdminTags)
+app.use('/admin/admin', adminRouters.Admin)
+app.use('/admin/user', adminRouters.AdminUsers)
+app.use('/admin/category', adminRouters.AdminCategory)
+app.use('/admin/like', adminRouters.AdminLike)
+app.use('/admin/post', adminRouters.AdminPost)
+app.use('/admin/unconfirmed', adminRouters.AdminUnconfirmed)
+app.use('/admin/reklama', adminRouters.AdminReklama)
+app.use('/admin/greatwords', adminRouters.AdminGreatWords)
+app.use('/admin/tag', adminRouters.AdminTags)
 
 // Client routes
 
-app.use('/api/user', User)
-app.use('/api/category', Category)
-app.use('/api/like', Like)
-app.use('/api/post', Posts)
-app.use('/api/unconfirmed', Unconfirmed)
-app.use('/api/tag', Tag)
-app.use('/api/comment', Comment)
-app.use('/api/view', View)
-app.use('/api/draft', Draft)
-app.use('/api/greatwords', GreatWords)
-app.use('/api/reklama', Reklama)
-app.use('/api/search', Search)
-app.use('/api/random', Random)
-app.use('/api/count', Count)
+app.use('/api/user', clientRoutes.User)
+app.use('/api/category', clientRoutes.Category)
+app.use('/api/like', clientRoutes.Like)
+app.use('/api/post', clientRoutes.Posts)
+app.use('/api/unconfirmed', clientRoutes.Unconfirmed)
+app.use('/api/tag', clientRoutes.Tag)
+app.use('/api/comment', clientRoutes.Comment)
+app.use('/api/view', clientRoutes.View)
+app.use('/api/draft', clientRoutes.Draft)
+app.use('/api/greatwords', clientRoutes.GreatWords)
+app.use('/api/reklama', clientRoutes.Reklama)
+app.use('/api/search', clientRoutes.Search)
+app.use('/api/random', clientRoutes.Random)
+app.use('/api/count', clientRoutes.Count)
 
 app.use((req, res, next) => {
     console.log({
@@ -107,16 +99,16 @@ app.use((req, res, next) => {
 
 app.use((req, res, next) => {
     console.log('404')
-
     res.status(404).send('404')
     next()
 })
 
-const start = () => {
-    models.sequelize.sync().then(() => {
-        app.listen(process.env.PORT, () => { console.log(colors.yellow(`[Server]`) + ': ' + colors.green(`http://localhost:${process.env.PORT}`)) })
+
+models.sequelize.sync().then(() => {
+    server.listen(process.env.PORT, () => {
+        console.log(colors.yellow(`[Server]`) + ': ' + colors.green(`http://localhost:${process.env.PORT}`))
     })
-}
+})
 
 
-start()
+

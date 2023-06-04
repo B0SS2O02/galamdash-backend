@@ -10,4 +10,6 @@ router.post('/', Like.add)
 
 router.delete('/', Like.del)
 
+router.get('/', Like.list)
+
 module.exports = router;

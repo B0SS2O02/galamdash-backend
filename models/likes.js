@@ -14,10 +14,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "post",
         onDelete: 'CASCADE'
       });
-      models.Posts.hasOne(Likes, {
+      models.Posts.hasMany(Likes, {
         foreignKey: "post"
       })
-      Likes.hasOne(models.Posts, {
+      Likes.hasMany(models.Posts, {
         foreignKey: "post"
       })
 

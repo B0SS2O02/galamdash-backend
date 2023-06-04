@@ -5,8 +5,16 @@ exports.path = {
             summary: 'Get comments of post',
             responses: {
                 '200': {
-                    'description': "OK"
+                    'description': "OK",
+                    content: {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/Comment"
+                            }
+                        }
+                    }
                 }
+
             },
         },
         parameters: [
@@ -51,7 +59,7 @@ exports.path = {
                                 },
                                 parent: {
                                     type: 'integer',
-                                    description:'Parent comment ID',
+                                    description: 'Parent comment ID',
                                     example: 2
                                 }
                             }
@@ -62,3 +70,28 @@ exports.path = {
         }
     }
 }
+exports.models = {
+    Comment: {
+
+        type: 'object',
+        properties: {
+            "id": {
+                type: 'integer',
+                example: 1
+            },
+            "user": {
+                type: 'string',
+                example: "Name"
+            },
+            "img": {
+                type: 'string',
+                example: "public/   images/default_avatar.jpg"
+            }
+        },
+
+    }
+
+}
+
+   
+

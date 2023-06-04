@@ -19,24 +19,63 @@ exports.list = async (req, res) => {
 
 exports.view = async (req, res) => {
     try {
-        const user = await models.Categories.findOne({
-            attributes: ['id', 'title'],
-            include: [{
-                model: models.Posts,
-                attributes: ['id', 'img','content', 'title', 'info', ['createdAt', 'time']],
-                include:[{
-                    model:models.Tags,
-                },{
-                    model:models.Users, 
-                    attributes:['id','nick','email','img']
-                }]
-            }],
-            where: {
-                id: req.params.id
-            }
+        if (req.params.id == 0) {
 
-        })
-        check.send(user, res)
+            const post_ids = await models.Posts.findAll({
+                attributes: ['id']
+            })
+            let ids = []
+            while (ids.length < 11) {
+                ids.push(post_ids[Math.floor(Math.random() * post_ids.length)].id)
+            }
+            const posts = await models.Posts.findAll({
+                where: {
+                    id: ids
+                },
+                attributes: ['id', 'title', 'img', 'content', 'info', ['createdAt', 'time']],
+                order: [
+                    ['id', 'DESC'],
+                ],
+                include: [{
+                    model: models.Tags,
+                    attributes: ['id'],
+                    include: {
+                        model: models.TagLists,
+                        attributes: ['id', 'title']
+                    }
+                }, {
+                    model: models.Users,
+                    attributes: ['id', 'nick', 'email', 'img']
+                }],
+            })
+            res.json({ Posts: posts })
+
+
+        } else {
+            const user = await models.Categories.findOne({
+                attributes: ['id', 'title'],
+                include: [{
+                    model: models.Posts,
+                    attributes: ['id', 'img', 'content', 'title', 'info', ['createdAt', 'time']],
+                    include: [{
+                        model: models.Tags,
+                        attributes: ['id'],
+                        include: {
+                            model: models.TagLists,
+                            attributes: ['id', 'title']
+                        }
+                    }, {
+                        model: models.Users,
+                        attributes: ['id', 'nick', 'email', 'img']
+                    }]
+                }],
+                where: {
+                    id: req.params.id
+                }
+
+            })
+            check.send(user, res)
+        }
 
     } catch (error) {
         console.error(error)
