@@ -40,19 +40,19 @@ app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
 app.use('/public', express.static('./public'))
 
-// app.use((req, res, next) => {
-//     console.log({
-//         time: Date(new Date()),
-//         ip: req.ip,
-//         header: req.headers,
-//         method: req.method,
-//         path: req.path,
-//         body: req.body,
-//         query: req.query,
-//         params: req.params,
-//     })
-//     next()
-// })
+app.use((req, res, next) => {
+    console.log({
+        time: Date(new Date()),
+        ip: req.ip,
+        header: req.headers,
+        method: req.method,
+        path: req.path,
+        body: req.body,
+        query: req.query,
+        params: req.params,
+    })
+    next()
+})
 
 // Admin routes
 app.use('/admin/admin', adminRouters.Admin)

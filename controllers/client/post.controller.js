@@ -39,9 +39,6 @@ exports.list = async (req, res) => {
             }, {
                 model: models.Users,
                 attributes: ['id', 'nick', 'email', 'img']
-            }, {
-                model: models.Users,
-                attributes: ['id', 'nick', 'email', 'img']
             }],
             offset: page * count,
             limit: count
@@ -187,3 +184,5 @@ exports.random = async (req, res) => {
         console.log(error)
     }
 }
+
+

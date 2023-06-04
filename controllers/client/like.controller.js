@@ -53,7 +53,7 @@ exports.del = async (req, res) => {
 
 exports.list = async (req, res) => {
     if (check.variables(['id'], req, res, 'You are not logineв')) {
-        const view = await models.Likes.findAll({
+        const like = await models.Likes.findAll({
             where: {
                 user: req.id,
                 type: 'like'
@@ -61,9 +61,25 @@ exports.list = async (req, res) => {
             attributes: ['id', ['updatedAt', 'time']],
             include: {
                 model: models.Posts,
-                attributes: ['id', 'title', 'content', 'img']
-            }
+                attributes: ['id', 'title', 'img', 'content', 'info', ['createdAt', 'time']],
+                include: [{
+                    model: models.Tags,
+                    attributes: ['id'],
+                    include: {
+                        model: models.TagLists,
+                        attributes: ['id', 'title']
+                    }
+                }, {
+                    model: models.Users,
+                    attributes: ['id', 'nick', 'email', 'img']
+                }],
+            }   
         })
-        check.send(view, res)
+        let Like=[]
+        for (let i = 0; i < like.length; i++) {
+            Like.push(like[i].Post)
+        }
+
+        check.send(Like, res)
     }
 }
