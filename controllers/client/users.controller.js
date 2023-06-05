@@ -11,7 +11,30 @@ exports.login = AsyncHandler(async (req, res) => {
         if (check.variables(['email', 'password'], req.body, res)) {
             const user = await models.Users.findOne({ where: { email: req.body.email } })
             if (!user) {
-                res.status(404).json({ msg: "User is not define" });
+                const user = await models.Users.findOne({ where: { nick: req.body.email } })
+                if (!user) {
+                    res.status(404).json({ msg: "User is not define" });
+
+                } else if (user.ban) {
+                    res.status(403).json({ msg: 'You are banned' })
+                } else if (!await bcrypt.compare(req.body.password, user.password)) {
+                    res.status(400).json({ msg: "Password is wrong" })
+                } else {
+                    const token = await jwt.sign(
+                        { user_id: user.id, type: user.type },
+                        process.env.TOKEN_KEY,
+                        {
+                            expiresIn: "24h",
+                        }
+                    )
+                    res.status(200).json({
+                        image: user.img,
+                        nick: user.nick,
+                        type: user.type,
+                        token: token
+                    })
+                }
+
             } else if (user.ban) {
                 res.status(403).json({ msg: 'You are banned' })
             } else if (!await bcrypt.compare(req.body.password, user.password)) {
@@ -160,49 +183,10 @@ exports.my = async (req, res) => {
 }
 
 
-exports.image = async (req, res) => {
-    try {
-        if (check.variables(['id'], req, res, 'You are not logined')) {
-            let user = await models.Users.findOne({
-                where: {
-                    id: req.id
-                }
-            })
-            if (!user) {
-                res.status(404).json({
-                    msg: 'Account not define'
-                })
-            } else {
-                const old = user.img
-                if (user.img !== "public/images/default_avatar.jpg") {
-                    fs.unlink(old, (err) => {
-                        if (err) return console.log(err)
-                    });
-                }
-                await models.Users.update(
-                    {
-                        img: req.file.path
-                    },
-                    {
-                        where: {
-                            id: req.id
-                        }
-                    }
-                )
-                res.status(200).json({
-                    img: req.file.path
-                })
-            }
-        }
-    } catch (error) {
-        console.log(error)
-    }
-
-}
 
 exports.edit = async (req, res) => {
     if (check.variables(['id'], req, res, 'You are not logined')) {
-        if (check.variables(['nick', 'info', 'password'], req.body, res)) {
+        if (check.variables(['nick', 'email', 'name', 'surname'], req.body, res)) {
             let user = await models.Users.findOne({
                 where: {
                     id: req.id
@@ -215,19 +199,48 @@ exports.edit = async (req, res) => {
             } else {
                 let body = {}
 
-                const nickname = await models.Users.findOne({
+                const old = user.img
+                if (!!req.file) {
+                    if (user.img !== "public/images/default_avatar.jpg") {
+                        fs.unlink(old, (err) => {
+                            if (err) return console.log(err)
+                        });
+                    }
+                    body["img"] = req.file.path
+                }
+
+
+                let nickname = await models.Users.findOne({
                     where: {
                         nick: req.body.nick
                     }
                 })
+                let email = await models.Users.findOne({
+                    where: {
+                        email: req.body.email
+                    }
+                })
+                if (user.nick === req.body.nick) {
+                    nickname = null
+                }
+                if (user.email === req.body.email) {
+                    email = null
+                }
                 if (!!nickname) {
                     res.status(400).json({
                         msg: "This nick already have"
                     })
+                } else if (!!email) {
+                    res.status(400).json({
+                        msg: "This email already have"
+                    })
                 } else {
                     body["nick"] = req.body.nick
-                    body["info"] = req.body.info
-                    body["password"] = await bcrypt.hash(req.body.password, 10);
+                    body["info"] = req.body.info || ''
+                    body['email'] = req.body.email
+                    body['name'] = req.body.name
+                    body['surname'] = req.body.surname
+                    // body["password"] = await bcrypt.hash(req.body.password, 10);
                     await models.Users.update(
                         body,
                         {

@@ -4,8 +4,7 @@ exports.io = (server) => {
     const io = require('socket.io')(server, {
         cors: process.env.ClientServer
     })
-    let connections = {}
-    let chat = []
+  
 
     io.use((socket, next) => {
         next()
@@ -14,10 +13,7 @@ exports.io = (server) => {
     io.on('connection', async (socket) => {
         console.log('client connected: ', socket.id, socket.handshake.address)
 
-
-
-
-        const data = await models.Comments.findAll({
+        let data = await models.Comments.findAll({
             attributes: ['id', 'user', 'content', 'parent', ['createdAt', 'time']],
             include: [
                 {
@@ -29,7 +25,10 @@ exports.io = (server) => {
                 post: socket.handshake.query.post
             }
         })
+
         let comments = []
+
+        data = JSON.parse(JSON.stringify(data))
 
         for (let i = 0; i < data.length; i++) {
             const c = data[i]
@@ -55,7 +54,6 @@ exports.io = (server) => {
                 }
             }
         }
-
 
         socket.emit('comment', comments)
 
@@ -86,6 +84,7 @@ exports.io = (server) => {
                 }
             })
             let comments = []
+            data = JSON.parse(JSON.stringify(data))
 
             for (let i = 0; i < data.length; i++) {
                 const c = data[i]
@@ -120,7 +119,6 @@ exports.io = (server) => {
 
         socket.on('disconnect', (reason) => {
             console.log(reason, socket.id)
-            delete connections[socket.id]
         })
     })
 }

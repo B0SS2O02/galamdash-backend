@@ -43,7 +43,33 @@ exports.list = async (req, res) => {
             offset: page * count,
             limit: count
         })
-        check.send(Posts, res)
+        let post = JSON.parse(JSON.stringify(Posts))
+        for (let i = 0; i < post.length; i++) {
+            let Var = []
+            Var = await models.Likes.findOne({
+                attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
+                where: {
+                    post: post[i].id
+                }
+            })
+            post[i]['like'] = JSON.parse(JSON.stringify(Var)).count
+            Var = await models.Views.findOne({
+                attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
+                where: {
+                    post: post[i].id
+                }
+            })
+            post[i]['view'] = JSON.parse(JSON.stringify(Var)).count
+            Var = await models.Comments.findOne({
+                attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
+                where: {
+                    post: post[i].id
+                }
+            })
+            post[i]['comment'] = JSON.parse(JSON.stringify(Var)).count
+        }
+
+        check.send(post, res)
     } catch (error) {
         console.log(error)
     }
@@ -107,7 +133,30 @@ exports.view = async (req, res) => {
                     id: req.params.id
                 }
             })
-            check.send(post, res)
+            let POST = JSON.parse(JSON.stringify(post)) 
+            let Var = 0
+            Var = await models.Likes.findOne({
+                attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
+                where: {
+                    post: POST.id
+                }
+            })
+            POST['like'] = JSON.parse(JSON.stringify(Var)).count
+            Var = await models.Views.findOne({
+                attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
+                where: {
+                    post: POST.id
+                }
+            })
+            POST['view'] = JSON.parse(JSON.stringify(Var)).count
+            Var = await models.Comments.findOne({
+                attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
+                where: {
+                    post: POST.id
+                }
+            })
+            POST['comment'] = JSON.parse(JSON.stringify(Var)).count
+            check.send(POST, res)
         }
     } catch (error) {
         console.log(error)
@@ -143,7 +192,32 @@ exports.search = async (req, res) => {
                     attributes: ['id', 'nick', 'email', 'img']
                 }],
             })
-            res.json(posts)
+            let post = JSON.parse(JSON.stringify(posts))
+            for (let i = 0; i < post.length; i++) {
+                let Var = []
+                Var = await models.Likes.findOne({
+                    attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
+                    where: {
+                        post: POST[i].id
+                    }
+                })
+                post[i]['like'] = JSON.parse(JSON.stringify(Var)).count
+                Var = await models.Views.findOne({
+                    attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
+                    where: {
+                        post: post[i].id
+                    }
+                })
+                post[i]['view'] = JSON.parse(JSON.stringify(Var)).count
+                Var = await models.Comments.findOne({
+                    attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
+                    where: {
+                        post: post[i].id
+                    }
+                })
+                post[i]['comment'] = JSON.parse(JSON.stringify(Var)).count
+            }
+            res.json(post)
         }
     } catch (error) {
         console.log(error)
@@ -179,7 +253,32 @@ exports.random = async (req, res) => {
                 attributes: ['id', 'nick', 'email', 'img']
             }],
         })
-        res.json(posts)
+        let post = JSON.parse(JSON.stringify(posts))
+        for (let i = 0; i < post.length; i++) {
+            let Var = []
+            Var = await models.Likes.findOne({
+                attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
+                where: {
+                    post: post[i].id
+                }
+            })
+            post[i]['like'] = JSON.parse(JSON.stringify(Var)).count
+            Var = await models.Views.findOne({
+                attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
+                where: {
+                    post: post[i].id
+                }
+            })
+            post[i]['view'] = JSON.parse(JSON.stringify(Var)).count
+            Var = await models.Comments.findOne({
+                attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
+                where: {
+                    post: post[i].id
+                }
+            })
+            post[i]['comment'] = JSON.parse(JSON.stringify(Var)).count
+        }
+        res.json(post)
     } catch (error) {
         console.log(error)
     }

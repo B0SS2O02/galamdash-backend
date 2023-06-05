@@ -1,5 +1,5 @@
 exports.path = {
-    '/api/reklama/{position}': {
+    '/api/reklama': {
         get: {
             tags: ['Reklama'],
             summary: "Reklama list",
@@ -8,17 +8,6 @@ exports.path = {
                     description: "OK",
                 }   
             }
-        },
-        parameters: [
-            {
-                in: 'path',
-                name: 'position',
-                description: "Reklama position",
-                shema: {
-                    type: 'integer'
-                }
-
-            }
-        ]
+        }
     }
 }

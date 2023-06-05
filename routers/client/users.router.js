@@ -33,9 +33,9 @@ router.get('/my', User.my)
 
 router.get('/own/:id', User.user)
 
-router.put('/image', upload.single('image'), User.image)
 
-router.put('/edit', User.edit)
+
+router.put('/edit', upload.single('image'), User.edit)
 
 
 

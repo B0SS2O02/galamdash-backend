@@ -116,7 +116,26 @@ exports.path = {
                 }
             }
         ]
-    }
+    },
+    "/api/random": {
+        "get": {
+            "tags": [
+                "Post"
+            ],
+            "summary": "Get random list of Posts",
+            "responses": {
+                "200": {
+                    "description": "ok",
+                  
+                }
+            },
+
+
+
+        },
+       
+
+    },
 }
 
 exports.models = {
