@@ -65,3 +65,24 @@ exports.add = async (req, res) => {
     }
 
 }
+
+exports.main = async (req, res) => {
+    const comments = await models.Comments.findAll({
+        attributes: ['id', 'content', 'parent', ['createdAt', 'time']],
+        order: [
+            ['id', 'DESC'],
+        ],
+        include: [
+            {
+                model: models.Users,
+                attributes: ['id', 'nick', 'email', 'img']
+            },
+            {
+                model: models.Posts,
+                attributes: ['id', 'title','img']
+            }
+        ],
+        limit: 10
+    })
+    res.json(comments)
+}
