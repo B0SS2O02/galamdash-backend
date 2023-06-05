@@ -3,12 +3,8 @@ const check = require('./check')
 
 exports.list = async (req, res) => {
     try {
-        const page = req.query.page - 1 || 0
-        const count = req.query.count || 10
         const category = await models.Categories.findAll({
-            attributes: ['id', 'title'],
-            offset: page * count,
-            limit: count
+            attributes: ['id', 'title']
         })
         check.send(category, res)
     } catch (error) {
@@ -48,6 +44,14 @@ exports.view = async (req, res) => {
                     attributes: ['id', 'nick', 'email', 'img']
                 }],
             })
+            const NotEmpty = (value) => {
+                value = JSON.parse(JSON.stringify(value))
+                if (value.length == 0) {
+                    return 0
+                } else {
+                    return value.count
+                }
+            }
             let post = JSON.parse(JSON.stringify(posts))
             for (let i = 0; i < post.length; i++) {
                 let Var = []
@@ -57,21 +61,21 @@ exports.view = async (req, res) => {
                         post: post[i].id
                     }
                 })
-                post[i]['like'] = JSON.parse(JSON.stringify(Var)).count
+                post[i]['like'] = NotEmpty(Var)
                 Var = await models.Views.findOne({
                     attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
                     where: {
                         post: post[i].id
                     }
                 })
-                post[i]['view'] = JSON.parse(JSON.stringify(Var)).count
+                post[i]['view'] = NotEmpty(Var)
                 Var = await models.Comments.findOne({
                     attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
                     where: {
                         post: post[i].id
                     }
                 })
-                post[i]['comment'] = JSON.parse(JSON.stringify(Var)).count
+                post[i]['comment'] = NotEmpty(Var)
             }
             res.json({ Posts: post })
 
@@ -108,21 +112,21 @@ exports.view = async (req, res) => {
                         post: post['Posts'][i].id
                     }
                 })
-                post['Posts'][i]['like'] = JSON.parse(JSON.stringify(Var)).count
+                post['Posts'][i]['like'] = NotEmpty(Var)
                 Var = await models.Views.findOne({
                     attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
                     where: {
                         post: post['Posts'][i].id
                     }
                 })
-                post['Posts'][i]['view'] = JSON.parse(JSON.stringify(Var)).count
+                post['Posts'][i]['view'] = NotEmpty(Var)
                 Var = await models.Comments.findOne({
                     attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
                     where: {
                         post: post['Posts'][i].id
                     }
                 })
-                post['Posts'][i]['comment'] = JSON.parse(JSON.stringify(Var)).count
+                post['Posts'][i]['comment'] = NotEmpty(Var)
             }
             check.send(post, res)
         }

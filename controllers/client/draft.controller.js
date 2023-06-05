@@ -8,7 +8,11 @@ exports.list = async (req, res) => {
                 where: {
                     creatorId: req.id
                 },
-                attributes: ['id', 'title', 'content', 'img', 'info', ['updatedAt', 'time']]
+                attributes: ['id', 'title', 'content', 'img', 'info', ['updatedAt', 'time']],
+                include: [ {
+                    model: models.Users,
+                    attributes: ['id', 'nick', 'email', 'img']
+                }],
             })
             res.json(drafts)
         }
@@ -89,9 +93,9 @@ exports.edit = async (req, res) => {
                         }
                     }
                     )
-                    if(draft){
+                    if (draft) {
                         res.json('Draft is update')
-                    }else{
+                    } else {
                         res.status(400).json('Draft is not update')
                     }
                 }

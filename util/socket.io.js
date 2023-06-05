@@ -4,7 +4,7 @@ exports.io = (server) => {
     const io = require('socket.io')(server, {
         cors: process.env.ClientServer
     })
-  
+
 
     io.use((socket, next) => {
         next()
@@ -58,12 +58,17 @@ exports.io = (server) => {
         socket.emit('comment', comments)
 
 
-        socket.on('send', async (text) => {
+        socket.on('send', async (Getdata) => {
             const { user_id, type } = jwt.verify(socket.handshake.auth.token, process.env.TOKEN_KEY)
+            let parent = null
+            if (!!Getdata.parent) {
+                parent = Getdata.parent
+            }
             await models.Comments.create({
                 post: socket.handshake.query.post,
                 user: user_id,
-                content: text
+                content: Getdata.text,
+                parent: parent
             })
 
             // chat.push({
@@ -71,7 +76,7 @@ exports.io = (server) => {
             //     text: text
             // })
 
-            const data = await models.Comments.findAll({
+            let data = await models.Comments.findAll({
                 attributes: ['id', 'user', 'content', 'parent', ['createdAt', 'time']],
                 include: [
                     {

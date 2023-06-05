@@ -43,6 +43,14 @@ exports.list = async (req, res) => {
             offset: page * count,
             limit: count
         })
+        const NotEmpty = (value) => {
+            value = JSON.parse(JSON.stringify(value))
+            if (value.length == 0) {
+                return 0
+            } else {
+                return value.count
+            }
+        }
         let post = JSON.parse(JSON.stringify(Posts))
         for (let i = 0; i < post.length; i++) {
             let Var = []
@@ -52,21 +60,21 @@ exports.list = async (req, res) => {
                     post: post[i].id
                 }
             })
-            post[i]['like'] = JSON.parse(JSON.stringify(Var)).count
+            post[i]['like'] = NotEmpty(Var)
             Var = await models.Views.findOne({
                 attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
                 where: {
                     post: post[i].id
                 }
             })
-            post[i]['view'] = JSON.parse(JSON.stringify(Var)).count
+            post[i]['view'] = NotEmpty(Var)
             Var = await models.Comments.findOne({
                 attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
                 where: {
                     post: post[i].id
                 }
             })
-            post[i]['comment'] = JSON.parse(JSON.stringify(Var)).count
+            post[i]['comment'] = NotEmpty(Var)
         }
 
         check.send(post, res)
@@ -108,6 +116,7 @@ exports.view = async (req, res) => {
                     )
                 }
             }
+            console.log(req.params.id)
             const post = await models.Posts.findOne({
                 include: [{
                     model: models.Categories,
@@ -133,29 +142,39 @@ exports.view = async (req, res) => {
                     id: req.params.id
                 }
             })
-            let POST = JSON.parse(JSON.stringify(post)) 
+            let POST = JSON.parse(JSON.stringify(post))
             let Var = 0
+
+            const NotEmpty = (value) => {
+                value = JSON.parse(JSON.stringify(value))
+                if (value.length == 0) {
+                    return 0
+                } else {
+                    return value.count
+                }
+            }
+
             Var = await models.Likes.findOne({
                 attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
                 where: {
                     post: POST.id
                 }
             })
-            POST['like'] = JSON.parse(JSON.stringify(Var)).count
+            POST['like'] = NotEmpty(Var)
             Var = await models.Views.findOne({
                 attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
                 where: {
                     post: POST.id
                 }
             })
-            POST['view'] = JSON.parse(JSON.stringify(Var)).count
+            POST['view'] = NotEmpty(Var)
             Var = await models.Comments.findOne({
                 attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
                 where: {
                     post: POST.id
                 }
             })
-            POST['comment'] = JSON.parse(JSON.stringify(Var)).count
+            POST['comment'] = NotEmpty(Var)
             check.send(POST, res)
         }
     } catch (error) {
@@ -201,21 +220,21 @@ exports.search = async (req, res) => {
                         post: POST[i].id
                     }
                 })
-                post[i]['like'] = JSON.parse(JSON.stringify(Var)).count
+                post[i]['like'] = NotEmpty(Var)
                 Var = await models.Views.findOne({
                     attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
                     where: {
                         post: post[i].id
                     }
                 })
-                post[i]['view'] = JSON.parse(JSON.stringify(Var)).count
+                post[i]['view'] = NotEmpty(Var)
                 Var = await models.Comments.findOne({
                     attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
                     where: {
                         post: post[i].id
                     }
                 })
-                post[i]['comment'] = JSON.parse(JSON.stringify(Var)).count
+                post[i]['comment'] = NotEmpty(Var)
             }
             res.json(post)
         }
@@ -262,21 +281,21 @@ exports.random = async (req, res) => {
                     post: post[i].id
                 }
             })
-            post[i]['like'] = JSON.parse(JSON.stringify(Var)).count
+            post[i]['like'] = NotEmpty(Var)
             Var = await models.Views.findOne({
                 attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
                 where: {
                     post: post[i].id
                 }
             })
-            post[i]['view'] = JSON.parse(JSON.stringify(Var)).count
+            post[i]['view'] = NotEmpty(Var)
             Var = await models.Comments.findOne({
                 attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
                 where: {
                     post: post[i].id
                 }
             })
-            post[i]['comment'] = JSON.parse(JSON.stringify(Var)).count
+            post[i]['comment'] = NotEmpty(Var)
         }
         res.json(post)
     } catch (error) {
@@ -284,4 +303,31 @@ exports.random = async (req, res) => {
     }
 }
 
+exports.create = async (req, res) => {
+    try {
+        if (check.variables(['id'], req, res, 'You are not logined')) {
+            if (check.variables(['file'], req, res, 'Image not define')) {
+                if (check.variables(['content', 'info', 'title'], req.body, res)) {
+                    req.body.CategoryId = parseInt(req.body.category)
+                    req.body.creatorId = req.id
+                    req.body.img = req.file.path
+                    const draft = await models.Posts.create(
+                        req.body
+                    )
+                    if (!draft) {
+                        res.status(500).json({
+                            msg: 'Draft is not create'
+                        })
+                    } else {
+                        res.json({
+                            msg: `Draft id is : ${draft.id}`
+                        })
+                    }
 
+                }
+            }
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
