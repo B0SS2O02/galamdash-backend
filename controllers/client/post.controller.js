@@ -4,9 +4,9 @@ const check = require('./check')
 exports.list = async (req, res) => {
     try {
         const page = req.query.page - 1 || 0
+        const count = req.query.count || 10
         const user = req.query.userId || 0
         const my = req.query.my || false
-        const count = req.query.count || 10
         const all = req.query.all || false
         let where = {}
         if (my) {
