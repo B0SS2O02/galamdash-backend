@@ -153,7 +153,7 @@ exports.view = async (req, res) => {
                     return value.count
                 }
             }
-
+            console.log(POST)
             Var = await models.Likes.findOne({
                 attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
                 where: {
@@ -272,6 +272,16 @@ exports.random = async (req, res) => {
                 attributes: ['id', 'nick', 'email', 'img']
             }],
         })
+
+        const NotEmpty = (value) => {
+            value = JSON.parse(JSON.stringify(value))
+            if (value.length == 0) {
+                return 0
+            } else {
+                return value.count
+            }
+        }
+
         let post = JSON.parse(JSON.stringify(posts))
         for (let i = 0; i < post.length; i++) {
             let Var = []
