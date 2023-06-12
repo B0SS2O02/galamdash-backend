@@ -26,7 +26,6 @@ exports.list = async (req, res, next) => {
     } catch (error) {
         console.error(error)
     }
-
 }
 
 exports.view = async (req, res, next) => {

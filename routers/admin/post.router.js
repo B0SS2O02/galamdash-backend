@@ -5,6 +5,7 @@ const Verify = require('../../controllers/admin/verify.js')
 
 
 const multer = require('multer');
+const { check, body } = require('express-validator');
 const storageConfig = multer.diskStorage({
     destination: (req, res, cb) => {
         cb(null, './public/images')
@@ -34,6 +35,21 @@ router.put('/ban/:id', Post.ban)
 
 router.delete('/:id', Post.del)
 
-router.put('/:id',upload.single('img'), Post.edit)
+router.put('/:id', upload.single('img'), Post.edit)
+
+router.post('/',
+    upload.single('img'),
+    check('img').custom((value, { req }) => {
+        if (req.file) {
+            return true
+        } else {
+            return false
+        }
+    }),
+    body('content').notEmpty(),
+    body('info').notEmpty(),
+    body('title').notEmpty(),
+    body('category').notEmpty(),
+    Post.create)
 
 module.exports = router;

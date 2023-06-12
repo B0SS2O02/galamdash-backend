@@ -22,16 +22,16 @@ exports.view = async (req, res) => {
             })
             let ids = []
             while (ids.length < 11) {
-                ids.push(post_ids[Math.floor(Math.random() * post_ids.length)].id)
+                const index=Math.floor(Math.random() * post_ids.length)
+                ids.push(post_ids[index].id)
+                console.log(index)
             }
+            
             const posts = await models.Posts.findAll({
                 where: {
                     id: ids
                 },
                 attributes: ['id', 'title', 'img', 'content', 'info', ['createdAt', 'time']],
-                order: [
-                    ['id', 'DESC'],
-                ],
                 include: [{
                     model: models.Tags,
                     attributes: ['id'],

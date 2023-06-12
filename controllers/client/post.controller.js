@@ -89,8 +89,7 @@ exports.view = async (req, res) => {
         if (check.variables(['id'], req.params, res)) {
             let where = {}
             if (!!req.id) {
-                console.log(req.params.id,
-                    req.id)
+                console.log('postview',req.params.id,req.id)
                 const view = await models.Views.findOne({
                     where: {
                         post: req.params.id,
@@ -116,7 +115,7 @@ exports.view = async (req, res) => {
                     )
                 }
             }
-            console.log(req.params.id)
+            console.log('id',req.params.id)
             const post = await models.Posts.findOne({
                 include: [{
                     model: models.Categories,
@@ -130,7 +129,6 @@ exports.view = async (req, res) => {
                     }
                 }, {
                     model: models.Likes,
-                    where: where,
                     attributes: ['id', 'type']
                 }, {
                     model: models.Users,
@@ -142,6 +140,7 @@ exports.view = async (req, res) => {
                     id: req.params.id
                 }
             })
+            console.log('1',post)
             let POST = JSON.parse(JSON.stringify(post))
             let Var = 0
 
@@ -326,11 +325,11 @@ exports.create = async (req, res) => {
                     )
                     if (!draft) {
                         res.status(500).json({
-                            msg: 'Draft is not create'
+                            msg: 'Post is not create'
                         })
                     } else {
                         res.json({
-                            msg: `Draft id is : ${draft.id}`
+                            msg: `Post id is : ${draft.id}`
                         })
                     }
 

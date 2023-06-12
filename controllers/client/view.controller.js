@@ -24,7 +24,8 @@ exports.list = async (req, res) => {
                 }],
             }
         })
-        let View=[]
+        let View = []
+        console.log(req.id, view)
         for (let i = 0; i < view.length; i++) {
             View.push(view[i].Post)
         }

@@ -1,6 +1,7 @@
 const models = require('../../models')
 const fs = require('fs')
 const check = require('../client/check')
+const { validationResult } = require('express-validator')
 
 exports.list = async (req, res) => {
     try {
@@ -267,4 +268,36 @@ exports.edit = async (req, res, next) => {
 
 
 
+}
+
+exports.create = async (req, res) => {
+    try {
+        const result = validationResult(req)
+        console.log(result)
+        if (result.errors.length) {
+            res.status(400).json(result.array())
+        } else {
+            req.body.CategoryId = parseInt(req.body.category)
+            req.body.creatorId = req.id
+            req.body.img = req.file.path
+            const draft = await models.Posts.create(
+                req.body
+            )
+            if (!draft) {
+                res.status(500).json({
+                    msg: 'Post is not create'
+                })
+            } else {
+                res.json({
+                    msg: `Post id is : ${draft.id}`
+                })
+            }
+        }
+
+
+
+
+    } catch (error) {
+        console.log(error)
+    }
 }
