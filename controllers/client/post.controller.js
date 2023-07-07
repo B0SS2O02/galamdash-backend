@@ -89,8 +89,7 @@ exports.view = async (req, res) => {
         if (check.variables(['id'], req.params, res)) {
             let where = {}
             if (!!req.id) {
-                console.log(req.params.id,
-                    req.id)
+                console.log('postview',req.params.id,req.id)
                 const view = await models.Views.findOne({
                     where: {
                         post: req.params.id,
@@ -116,7 +115,7 @@ exports.view = async (req, res) => {
                     )
                 }
             }
-            console.log(req.params.id)
+            console.log('id',req.params.id)
             const post = await models.Posts.findOne({
                 include: [{
                     model: models.Categories,
@@ -130,7 +129,6 @@ exports.view = async (req, res) => {
                     }
                 }, {
                     model: models.Likes,
-                    where: where,
                     attributes: ['id', 'type']
                 }, {
                     model: models.Users,
@@ -142,6 +140,7 @@ exports.view = async (req, res) => {
                     id: req.params.id
                 }
             })
+            console.log('1',post)
             let POST = JSON.parse(JSON.stringify(post))
             let Var = 0
 
@@ -153,7 +152,7 @@ exports.view = async (req, res) => {
                     return value.count
                 }
             }
-
+            console.log(POST)
             Var = await models.Likes.findOne({
                 attributes: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'count']],
                 where: {
@@ -272,6 +271,16 @@ exports.random = async (req, res) => {
                 attributes: ['id', 'nick', 'email', 'img']
             }],
         })
+
+        const NotEmpty = (value) => {
+            value = JSON.parse(JSON.stringify(value))
+            if (value.length == 0) {
+                return 0
+            } else {
+                return value.count
+            }
+        }
+
         let post = JSON.parse(JSON.stringify(posts))
         for (let i = 0; i < post.length; i++) {
             let Var = []
@@ -316,11 +325,11 @@ exports.create = async (req, res) => {
                     )
                     if (!draft) {
                         res.status(500).json({
-                            msg: 'Draft is not create'
+                            msg: 'Post is not create'
                         })
                     } else {
                         res.json({
-                            msg: `Draft id is : ${draft.id}`
+                            msg: `Post id is : ${draft.id}`
                         })
                     }
 

@@ -54,33 +54,24 @@ app.use((req, res, next) => {
     next()
 })
 
+const Test = require('./test')
+
 // Admin routes
-app.use('/admin/admin', adminRouters.Admin)
-app.use('/admin/user', adminRouters.AdminUsers)
-app.use('/admin/category', adminRouters.AdminCategory)
-app.use('/admin/like', adminRouters.AdminLike)
-app.use('/admin/post', adminRouters.AdminPost)
-app.use('/admin/unconfirmed', adminRouters.AdminUnconfirmed)
-app.use('/admin/reklama', adminRouters.AdminReklama)
-app.use('/admin/greatwords', adminRouters.AdminGreatWords)
-app.use('/admin/tag', adminRouters.AdminTags)
+
+for (const route in adminRouters) {
+    app.use(`/admin/${route}`, adminRouters[route])
+}
 
 // Client routes
 
-app.use('/api/user', clientRoutes.User)
-app.use('/api/category', clientRoutes.Category)
-app.use('/api/like', clientRoutes.Like)
-app.use('/api/post', clientRoutes.Posts)
-app.use('/api/unconfirmed', clientRoutes.Unconfirmed)
-app.use('/api/tag', clientRoutes.Tag)
-app.use('/api/comment', clientRoutes.Comment)
-app.use('/api/view', clientRoutes.View)
-app.use('/api/draft', clientRoutes.Draft)
-app.use('/api/greatwords', clientRoutes.GreatWords)
-app.use('/api/reklama', clientRoutes.Reklama)
-app.use('/api/search', clientRoutes.Search)
-app.use('/api/random', clientRoutes.Random)
-app.use('/api/count', clientRoutes.Count)
+for (const route in clientRoutes) {
+    app.use(`/api/${route}`, clientRoutes[route])
+}
+
+
+
+
+app.use('/test', Test)
 
 app.use((req, res, next) => {
     console.log({
