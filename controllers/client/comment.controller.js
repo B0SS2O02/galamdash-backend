@@ -2,7 +2,7 @@ const models = require('../../models')
 const check = require('./check')
 
 exports.list = async (req, res) => {
-    if (check.variables(['id'], req.params, res)) {
+    if (check.variables(['id'], req.params, res) && Number.isInteger(req.params.id)) {
         const com = await models.Comments.findAll({
             attributes: ['id', 'user', 'content', 'parent', ['createdAt', 'time']],
             include: [

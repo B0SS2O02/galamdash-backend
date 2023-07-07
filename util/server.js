@@ -104,7 +104,7 @@ app.use((req, res, next) => {
 })
 
 
-models.sequelize.sync().then(() => {
+models.sequelize.authenticate().then(() => {
     server.listen(process.env.PORT, () => {
         console.log(colors.yellow(`[Server]`) + ': ' + colors.green(`http://localhost:${process.env.PORT}`))
     })
